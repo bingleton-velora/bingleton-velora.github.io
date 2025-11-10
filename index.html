@@ -79,7 +79,7 @@ if ('serviceWorker' in navigator) {
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       z-index: 0;
-      pointer-events: none;
+      pointer-events: none; 
     }
     .topbar {
       position: fixed;
@@ -255,7 +255,7 @@ if ('serviceWorker' in navigator) {
         if (i > 0) {
           i--;
           rainbowText.textContent = prefix;
-          typewriterEl.textContent = word.substring(0, i);
+          typewriterEl.textContent = word.substring(0, i); //adding this so commit to diff url
           setTimeout(untype, untypingSpeed);
         } else if (cb) {
           setTimeout(cb, 400);
