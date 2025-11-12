@@ -1,86 +1,40 @@
 
-<!-- Ultimate Game Stash file--> 
-<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Velora - Sonic Revert</title>
 
-<script>
-   (function () {
-    const savedTitle = localStorage.getItem('customTitle') || getCookie('customTitle');
-    const savedFavicon = localStorage.getItem('customFavicon') || getCookie('customFavicon');
-    const defaultFavicon = 'images/icons/logo.png';
+  <!-- Put CSS links here -->
+  <link href="https://cdn.jsdelivr.net/gh/lee2sman/everyday@d45d601d2c4d60adf809a0b677c00b7d12aba7e9/96/TemplateData/style.css" rel="stylesheet">
 
-    
-    if (savedTitle) document.title = savedTitle;
+  <!-- Unity progress helper (ok) -->
+  <script src="https://cdn.jsdelivr.net/gh/lee2sman/everyday@d45d601d2c4d60adf809a0b677c00b7d12aba7e9/96/TemplateData/UnityProgress.js"></script>
 
-    const favicon = savedFavicon || defaultFavicon;
-    setFavicon(favicon);
+  <!-- Unity loader (must match the build version you uploaded) -->
+  <script src="https://cdn.jsdelivr.net/gh/CycloKid/sonic-revert@938c293b495adfec91a0b199700e3d2cd22c0252/Build/UnityLoader.js"></script>
 
-    if (!savedFavicon) {
-      localStorage.setItem('customFavicon', favicon);
-      document.cookie = `customFavicon=${encodeURIComponent(favicon)}; path=/`;
-    }
+  <style>
+    html,body { height: 100%; margin: 0; background:#231f20; }
+    .webgl-content { width:100%; height:100%; }
+    #gameContainer { width:100vw; height:100vh; }
+  </style>
+</head>
+<body>
+  <div class="webgl-content">
+    <div id="gameContainer"></div>
+  </div>
 
-    function setFavicon(url) {
-      let link = document.querySelector('link[rel="icon"]');
-      if (!link) {
-        link = document.createElement('link');
-        link.rel = 'icon';
-        document.head.appendChild(link);
-      }
-      link.href = url;
-    }
+  <script>
+    // JSON URL must point to the same build (all build files expected relative to that JSON)
+    const jsonUrl = "https://cdn.jsdelivr.net/gh/Iwannadieinc/games@007e2fbe2800b25085617debbd98bbed2ecf54ac/games/Sonic_Revert.json";
 
-    function getCookie(name) {
-      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      return match ? decodeURIComponent(match[2]) : null;
-    }
-
-
-    window.setCustomCloak = function(title, faviconURL) {
-      if (title) {
-        document.title = title;
-        localStorage.setItem('customTitle', title);
-        document.cookie = `customTitle=${encodeURIComponent(title)}; path=/`;
-      }
-      if (faviconURL) {
-        setFavicon(faviconURL);
-        localStorage.setItem('customFavicon', faviconURL);
-        document.cookie = `customFavicon=${encodeURIComponent(faviconURL)}; path=/`;
-      }
-    };
-  })();
-</script>
-<title>Velora - Sonic Revert</title>
-</style><style type="text/css">#button {
-  display:none;
-}
-.imgb_vis {
-  animation: imgb-animation 7s linear;
-}
-@keyframes imgb-animation {
-  10% {
-    transform: translateX(0);
-  }
-  20% {
-    transform: translateX(100px);
-  }
-  90% {
-    transform: translateX(100px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}</style></head><body dir="ltr"><script src="https://cdn.jsdelivr.net/gh/lee2sman/everyday@d45d601d2c4d60adf809a0b677c00b7d12aba7e9/96/TemplateData/UnityProgress.js"></script><script src="https://cdn.jsdelivr.net/gh/CycloKid/sonic-revert@938c293b495adfec91a0b199700e3d2cd22c0252/Build/UnityLoader.js"></script><script>
-      var gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/Iwannadieinc/games@007e2fbe2800b25085617debbd98bbed2ecf54ac/games/Sonic_Revert.json", {onProgress: UnityProgress,Module:{onRuntimeInitialized: function() {UnityProgress(gameInstance, "complete")}}});
-    </script><script src=""></script><div class="webgl-content">
-        <div id="gameContainer" style="width: 100vw; height: 100vh; padding: 0px; margin: 0px; border: 0px; position: relative; background: rgb(35, 31, 32);"><canvas id="#canvas" style="width: 100%; height: 100%;"></canvas><div class="logo Dark"></div><div class="progress Dark"><div class="empty" style="width: 13.4548%;"></div><div class="full" style="width: 86.5452%;"></div></div></div>
-        </div>
-		
-
-
-</script></body></html>
-</script><link href="https://cdn.jsdelivr.net/gh/lee2sman/everyday@d45d601d2c4d60adf809a0b677c00b7d12aba7e9/96/TemplateData/style.css" rel="stylesheet">
-
-    
-    
-	
-    <script>
+    // Instantiate with the default onProgress handler
+    // Note: UnityLoader.instantiate returns the GameInstance object synchronously.
+    var gameInstance = UnityLoader.instantiate("gameContainer", jsonUrl, {
+      onProgress: UnityProgress
+    });
+  </script>
+</body>
+</html>
