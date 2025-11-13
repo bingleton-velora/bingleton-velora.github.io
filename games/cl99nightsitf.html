@@ -6,63 +6,41 @@
 <title>Velora – 99Days</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/99itf@main/style.css"/>
 <style>
-  html, body {
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    height: 100%;
-    background: #000;
-    color: #fff;
-  }
   canvas:focus { outline: none; }
-  .spinner {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 4px solid rgba(255,255,255,0.2);
-    border-top-color: #00aaff;
-    animation: spin 1s linear infinite;
-  }
+  html, body { padding:0; margin:0; overflow:hidden; -webkit-touch-callout:none; -webkit-user-select:none; -khtml-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none; -webkit-tap-highlight-color:rgba(0,0,0,0); height:100%; }
+  .spinner { width:36px; height:36px; border-radius:50%; border:4px solid rgba(0,0,0,0.2); border-top-color:#444; animation:spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  #loading-cover {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #000;
-    z-index: 999;
-  }
-  #unity-progress-bar-empty {
-    width: 200px;
-    height: 8px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 4px;
-    margin-top: 10px;
-  }
-  #unity-progress-bar-full {
-    height: 8px;
-    background: #00aaff;
-    border-radius: 4px;
-    width: 0%;
-    transition: width 0.2s;
-  }
+  #loading-cover { position: absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.6); z-index:999; }
+  /* Ad container: pointer-events none so it never blocks the game; only the close button accepts clicks */
+  #ad-container { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: min(728px, calc(100% - 20px)); height: 90px; background: rgba(0,0,0,0.9); display:none; z-index:10000; overflow:hidden; pointer-events:none; box-shadow:0 2px 12px rgba(0,0,0,.45); }
+  #ad-iframe { position:absolute; top:0; left:50%; transform:translateX(-50%); width:745px; height:90px; border:0; pointer-events:auto; }
+  #close-ad { position:absolute; top:6px; right:8px; background:#ff4d4d; color:#fff; border:0; padding:5px 9px; font-size:13px; border-radius:4px; cursor:pointer; opacity:0.9; z-index:10001; pointer-events:auto; }
+  #ad-container.hidden { transform: translate(-50%, -110%); transition: transform .45s ease; }
+  @media (max-width:440px) { #ad-container { width: calc(100% - 12px); } #ad-iframe{ width:708px; } }
 </style>
 </head>
 <body class="dark">
-  <div id="unity-container" style="width:100%;height:100%;position:relative;">
+  <div id="unity-container" class="unity-desktop" style="width:100%;height:100%;position:relative;">
     <canvas id="unity-canvas" tabindex="-1" style="width:100%;height:100%;"></canvas>
   </div>
 
-  <div id="loading-cover">
-    <div style="text-align:center">
+  <div id="loading-cover" style="display:none;">
+    <div id="unity-loading-bar">
+      <div id="unity-progress-bar-empty" style="display:none;">
+        <div id="unity-progress-bar-full" style="width:0%;height:8px;background:#0af;border-radius:4px;"></div>
+      </div>
       <div class="spinner"></div>
-      <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div>
-      <p style="font-family:sans-serif;font-size:14px;">Loading game...</p>
     </div>
   </div>
 
+  <!-- Non-blocking ad area -->
+  <div id="ad-container" aria-hidden="true" role="dialog" aria-label="Advertisement">
+    <iframe id="ad-iframe" src="" scrolling="no" frameborder="0" sandbox="allow-scripts allow-popups allow-same-origin"></iframe>
+    <button id="close-ad" aria-label="Close Ad">Close</button>
+  </div>
+
   <script>
+    // --- Unity loader & part merging (unchanged logic but with timeouts and safe fallbacks) ---
     const buildUrl = "https://cdn.jsdelivr.net/gh/bubbls/99itf@main/Build";
     const loaderUrl = buildUrl + "/Build.loader.js";
     const cdnBaseUrl = "https://cdn.jsdelivr.net/gh/bubbls/99itf@main/";
@@ -81,64 +59,159 @@
       cdnBaseUrl + "Build.wasm.br.part4",
     ];
 
+    async function fetchAndCombineParts(partUrls, timeoutMs = 20000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const buffers = [];
+        for (const url of partUrls) {
+          const response = await fetch(url, { signal: controller.signal });
+          if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`);
+          buffers.push(await response.arrayBuffer());
+        }
+        const totalLength = buffers.reduce((s, b) => s + b.byteLength, 0);
+        const combined = new Uint8Array(totalLength);
+        let offset = 0;
+        for (const buffer of buffers) {
+          combined.set(new Uint8Array(buffer), offset);
+          offset += buffer.byteLength;
+        }
+        return new Blob([combined], { type: 'application/octet-stream' });
+      } finally {
+        clearTimeout(id);
+      }
+    }
+
+    const config = {
+      dataUrl: "",
+      frameworkUrl: buildUrl + "/Build.framework.js",
+      codeUrl: "",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "DefaultCompany",
+      productName: "99Days",
+      productVersion: "0.1"
+    };
+
     const canvas = document.querySelector("#unity-canvas");
     const loadingCover = document.querySelector("#loading-cover");
     const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
     const progressBarFull = document.querySelector("#unity-progress-bar-full");
+    const spinner = document.querySelector('.spinner');
 
-    async function fetchAndCombineParts(partUrls) {
-      const buffers = [];
-      for (const url of partUrls) {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Failed to fetch ${url}`);
-        buffers.push(await res.arrayBuffer());
-      }
-      const total = buffers.reduce((sum, b) => sum + b.byteLength, 0);
-      const combined = new Uint8Array(total);
-      let offset = 0;
-      for (const b of buffers) {
-        combined.set(new Uint8Array(b), offset);
-        offset += b.byteLength;
-      }
-      return new Blob([combined]);
-    }
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    function FocusGame(){ window.focus(); canvas.focus(); }
+    window.addEventListener('pointerdown', FocusGame);
+    window.addEventListener('touchstart', FocusGame);
 
-    async function initUnity() {
+    (async function init() {
       try {
-        const [dataBlob, wasmBlob] = await Promise.all([
-          fetchAndCombineParts(dataParts),
-          fetchAndCombineParts(wasmParts)
-        ]);
+        loadingCover.style.display = "";
+        spinner.style.display = "";
+        const s = document.createElement("script");
+        s.src = loaderUrl;
+        s.async = true;
+        s.onload = async () => {
+          try {
+            const dataBlob = await fetchAndCombineParts(dataParts, 30000);
+            const wasmBlob = await fetchAndCombineParts(wasmParts, 30000);
+            config.dataUrl = URL.createObjectURL(dataBlob);
+            config.codeUrl = URL.createObjectURL(wasmBlob);
+          } catch (err) {
+            console.warn("Combine parts failed or timed out - continuing with loader defaults.", err);
+          }
 
-        const config = {
-          dataUrl: URL.createObjectURL(dataBlob),
-          frameworkUrl: buildUrl + "/Build.framework.js",
-          codeUrl: URL.createObjectURL(wasmBlob),
-          streamingAssetsUrl: "StreamingAssets",
-          companyName: "DefaultCompany",
-          productName: "99Days",
-          productVersion: "0.1"
-        };
-
-        const loader = document.createElement("script");
-        loader.src = loaderUrl;
-        loader.onload = () => {
-          createUnityInstance(canvas, config, (progress) => {
-            progressBarFull.style.width = `${progress * 100}%`;
-          }).then(() => {
+          if (typeof createUnityInstance === "function") {
+            createUnityInstance(canvas, config, (progress) => {
+              spinner.style.display = "none";
+              progressBarEmpty.style.display = "";
+              progressBarFull.style.width = `${100 * progress}%`;
+            }).then((unityInstance) => {
+              loadingCover.style.display = "none";
+            }).catch((message) => {
+              console.error("Unity load error:", message);
+            });
+          } else {
+            console.error("createUnityInstance not found in loader.");
             loadingCover.style.display = "none";
-          }).catch((err) => {
-            console.error("Unity load error:", err);
-          });
+          }
         };
-        document.body.appendChild(loader);
-      } catch (err) {
-        console.error("Failed to load Unity files:", err);
-        loadingCover.innerHTML = "<p style='color:white;'>Failed to load game. Try reloading the page.</p>";
+        s.onerror = (e) => { console.error("Failed to load loader script", e); loadingCover.style.display = "none"; };
+        document.body.appendChild(s);
+      } catch (e) {
+        console.error("Init error:", e);
+        loadingCover.style.display = "none";
       }
-    }
 
-    initUnity();
+      // After starting Unity load, initialize the ad asynchronously and fail-safe
+      initAd();
+    })();
+
+    // --- Ad logic (non-blocking, with timeout) ---
+    function initAd() {
+      const AD_URL = "https://example-ad-network/example-ad.html"; // <-- Replace with your real ad src
+      const adContainer = document.getElementById('ad-container');
+      const adIframe = document.getElementById('ad-iframe');
+      const closeBtn = document.getElementById('close-ad');
+
+      // If ad src is blank or intentionally disabled, skip showing
+      if (!AD_URL) return;
+
+      // Show ad container but keep pointer-events none for the container itself so it can't block the game
+      const showDelay = 2000; // show ad after 2s
+      const loadTimeout = 8000; // if iframe hasn't loaded in 8s, hide it
+      let loadTimer = null;
+      let hideTimer = null;
+
+      function showAd() {
+        adContainer.style.display = 'block';
+        adContainer.classList.remove('hidden');
+        adContainer.setAttribute('aria-hidden', 'false');
+
+        // Set iframe src asynchronously
+        let loaded = false;
+        adIframe.onload = function() {
+          loaded = true;
+          clearTimeout(loadTimer);
+        };
+        adIframe.onerror = function() {
+          clearTimeout(loadTimer);
+          hideAd();
+        };
+
+        // start loading iframe
+        try {
+          adIframe.src = AD_URL;
+        } catch (err) {
+          console.warn("Ad iframe src set error", err);
+          hideAd();
+          return;
+        }
+
+        // If iframe doesn't load within loadTimeout, hide it (fail-safe)
+        loadTimer = setTimeout(() => {
+          if (!loaded) {
+            console.warn("Ad failed to load in time — hiding ad.");
+            hideAd();
+          }
+        }, loadTimeout);
+      }
+
+      function hideAd() {
+        try {
+          adContainer.classList.add('hidden');
+          adContainer.setAttribute('aria-hidden', 'true');
+          // remove src so it frees network and won't block
+          adIframe.src = "";
+          // fully hide after animation
+          hideTimer = setTimeout(() => adContainer.style.display = 'none', 500);
+        } catch (e) { console.warn(e); }
+      }
+
+      closeBtn.addEventListener('click', hideAd);
+
+      // initial show
+      setTimeout(showAd, showDelay);
+    }
   </script>
 </body>
 </html>
