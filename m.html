@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script> 
+  <script>
+    (function () {
+      const savedTitle = localStorage.getItem('customTitle') || getCookie('customTitle');
+      const savedFavicon = localStorage.getItem('customFavicon') || getCookie('customFavicon');
+      const defaultFavicon = 'images/icons/logo.png';
+      if (savedTitle) document.title = savedTitle;
+      const favicon = savedFavicon || defaultFavicon;
+      setFavicon(favicon);
+      if (!savedFavicon) {
+        localStorage.setItem('customFavicon', favicon);
+        document.cookie = `customFavicon=${encodeURIComponent(favicon)}; path=/`;
+      }
+      function setFavicon(url) {
+        let link = document.querySelector('link[rel="icon"]');
+        if (!link) {
+          link = document.createElement('link');
+          link.rel = 'icon';
+          document.head.appendChild(link);
+        }
+        link.href = url;
+      }
+      function getCookie(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Velora - Free Movies & Shows</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  
+  <style>
+    /* Using your exact CSS variables and styling */
+    :root {
+      --bg-gradient-start: #14141f;
+      --bg-gradient-end: #1f1f2f;
+      --accent-color: #e50914; /* Switched to Movie-Red, but you can change back to #4a90e2 */
+      --accent-glow: rgba(229, 9, 20, 0.6);
+      --text-color: #e0e0e0;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-hover-bg: rgba(255, 255, 255, 0.1);
+      --glass-bg: rgba(20, 20, 30, 0.75);
+      --border-radius: 12px;
+      --transition-speed: 0.3s;
+      --sidebar-width: 220px;
+      --topbar-height: 64px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-color);
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    #tsparticles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    
+    /* Reusing your Topbar, Sidebar, and Grid styles exactly */
+    .topbar {
+      position: fixed; top: 0; left: 0; width: 100%; height: var(--topbar-height);
+      background: var(--glass-bg); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 24px; z-index: 10; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    .topbar img.logo { height: 70px; position: absolute; left: 54px; top: -3px; transition: transform var(--transition-speed); }
+    .topbar img.logo:hover { transform: rotate(-5deg) scale(1.05); }
+    
+    .search-container { flex: none; margin: 0 auto; width: 360px; display: flex; align-items: center; }
+    .search-container input {
+      width: 100%; padding: 8px 12px; border: none; border-radius: var(--border-radius) 0 0 var(--border-radius);
+      background: rgba(255, 255, 255, 0.1); color: var(--text-color); outline: none;
+    }
+    .search-container button {
+      padding: 8px 12px; border: none; border-radius: 0 var(--border-radius) var(--border-radius) 0;
+      background: var(--accent-color); color: #fff; font-weight: 600; cursor: pointer;
+    }
+
+    .sidebar {
+      position: fixed; top: var(--topbar-height); left: 0; width: var(--sidebar-width); bottom: 0;
+      background: var(--glass-bg); backdrop-filter: blur(8px); padding: 16px;
+      display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 9;
+    }
+    .sidebar a {
+      padding: 10px 16px; color: var(--text-color); text-decoration: none; font-size: 14px;
+      border-radius: var(--border-radius); transition: 0.3s;
+    }
+    .sidebar a:hover { background: var(--accent-color); color: #fff; transform: translateX(4px); }
+
+    .main { position: absolute; top: var(--topbar-height); left: var(--sidebar-width); right: 0; bottom: 0; padding: 24px; overflow-y: auto; z-index: 1; }
+    
+    .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+    .game-item {
+      position: relative; background: var(--card-bg); border: 2px solid transparent;
+      border-radius: var(--border-radius); overflow: hidden; cursor: pointer; transition: 0.3s;
+    }
+    .game-item:hover { transform: translateY(-8px); border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
+    .game-item img { width: 100%; height: 260px; object-fit: cover; display: block; }
+
+    /* Heart and Hover Text */
+    .game-item::after {
+      content: attr(data-title); position: absolute; bottom: 0; left: 0; width: 100%;
+      padding: 10px; background: rgba(0, 0, 0, 0.8); color: #fff; font-size: 14px;
+      text-align: center; opacity: 0; transition: 0.3s;
+    }
+    .game-item:hover::after { opacity: 1; }
+    .game-item .heart { position: absolute; top: 8px; right: 8px; font-size: 22px; color: #ff0000; z-index: 2; }
+
+    .favorites-bar img { width: 40px; height: 55px; border-radius: 4px; object-fit: cover; cursor: pointer; margin: 0 4px; }
+    .actions-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .actions-bar button { background: var(--accent-color); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="tsparticles"></div>
+  
+  <div class="topbar">
+    <a href="index.html"><img src="images/icons/velora.png" alt="Logo" class="logo"></a>
+    <div class="search-container">
+      <input type="text" id="searchInput" onkeyup="searchMovies()" placeholder="Search movies or shows...">
+      <button onclick="searchMovies()">Search</button>
+    </div>
+    <a href="settings.html"><img src="images/icons/settings.png" alt="Settings" style="height:35px; position:absolute; right:30px; top:15px;"></a>
+  </div>
+
+  <div class="sidebar">
+    <a href="#" onclick="filterMovies('')">🎬 - All Movies</a>
+    <a href="#" onclick="filterMovies('action')">💥 - Action</a>
+    <a href="#" onclick="filterMovies('horror')">👻 - Horror</a>
+    <a href="#" onclick="filterMovies('comedy')">😂 - Comedy</a>
+    <a href="#" onclick="filterMovies('scifi')">🚀 - Sci-Fi</a>
+    <a href="#" onclick="filterMovies('drama')">🎭 - Drama</a>
+  </div>
+
+  <div class="main">
+    <div id="searchResultsMessage" style="display:none; margin-bottom:15px;"></div>
+    
+    <div class="actions-bar">
+      <button id="randomBtn">🎲 Surprise Movie</button>
+      <div class="favorites-bar">
+        <span>❤️ Watchlist:</span>
+        <div id="favoriteIcons" style="display:inline-block; vertical-align:middle; margin-left:10px;"></div>
+      </div>
+    </div>
+
+    <div class="game-grid" id="movieGrid">
+      <div class="game-item" data-title="The Matrix" data-movie="watch.html?v=matrix" data-icon="images/posters/matrix.jpg">
+        <div class="heart">♡</div>
+        <img src="images/posters/matrix.jpg" alt="matrix action scifi" onclick="openMovie('watch.html?v=matrix')">
+      </div>
+
+      <div class="game-item" data-title="Interstellar" data-movie="watch.html?v=interstellar" data-icon="images/posters/interstellar.jpg">
+        <div class="heart">♡</div>
+        <img src="images/posters/interstellar.jpg" alt="interstellar scifi drama" onclick="openMovie('watch.html?v=interstellar')">
+      </div>
+
+      </div>
+  </div>
+
+  <script>
+    // Particles Config (Identical to your original)
+    tsParticles.load("tsparticles", {
+      fpsLimit: 60, particles: {
+        number: { value: 60 }, color: { value: "#ffffff" },
+        opacity: { value: 0.3 }, size: { value: { min: 1, max: 2 } },
+        move: { enable: true, speed: 0.8 }
+      }
+    });
+
+    const WATCHLIST_KEY = 'veloraWatchlist';
+    function getFavorites() { return JSON.parse(localStorage.getItem(WATCHLIST_KEY) || '[]'); }
+    function saveFavorites(arr) { localStorage.setItem(WATCHLIST_KEY, JSON.stringify(arr)); }
+
+    function toggleFavorite(moviePath) {
+      let favs = getFavorites();
+      favs = favs.includes(moviePath) ? favs.filter(m => m !== moviePath) : [...favs, moviePath];
+      saveFavorites(favs);
+      renderFavoritesBar();
+      updateAllHearts();
+    }
+
+    function renderFavoritesBar() {
+      const container = document.getElementById('favoriteIcons');
+      container.innerHTML = '';
+      getFavorites().forEach(path => {
+        const item = document.querySelector(`[data-movie="${path}"]`);
+        if (item) {
+          const img = document.createElement('img');
+          img.src = item.getAttribute('data-icon');
+          img.onclick = () => openMovie(path);
+          container.appendChild(img);
+        }
+      });
+    }
+
+    function updateAllHearts() {
+      document.querySelectorAll('.game-item').forEach(item => {
+        const path = item.getAttribute('data-movie');
+        item.querySelector('.heart').textContent = getFavorites().includes(path) ? '❤' : '♡';
+      });
+    }
+
+    function searchMovies() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      document.querySelectorAll(".game-item").forEach(item => {
+        const text = item.querySelector("img").alt.toLowerCase();
+        item.style.display = text.includes(input) ? "block" : "none";
+      });
+    }
+
+    function filterMovies(term) {
+      document.getElementById("searchInput").value = term;
+      searchMovies();
+    }
+
+    function openMovie(path) {
+      window.location.href = path; // Or your iframe.html?movie=...
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.game-item .heart').forEach(heart => {
+        heart.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleFavorite(heart.parentElement.getAttribute('data-movie'));
+        });
+      });
+
+      document.getElementById('randomBtn').addEventListener('click', () => {
+        const items = Array.from(document.querySelectorAll('.game-item:not([style*="display: none"])'));
+        if (items.length) openMovie(items[Math.floor(Math.random() * items.length)].getAttribute('data-movie'));
+      });
+
+      updateAllHearts();
+      renderFavoritesBar();
+    });
+  </script>
+</body>
+</html>
