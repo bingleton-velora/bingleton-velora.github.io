@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
- <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
-}
-</script> <script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script> 
+  <script>
     (function () {
       const savedTitle = localStorage.getItem('customTitle') || getCookie('customTitle');
       const savedFavicon = localStorage.getItem('customFavicon') || getCookie('customFavicon');
       const defaultFavicon = 'images/icons/logo.png';
-
       if (savedTitle) document.title = savedTitle;
       const favicon = savedFavicon || defaultFavicon;
       setFavicon(favicon);
@@ -18,7 +18,6 @@ if ('serviceWorker' in navigator) {
         localStorage.setItem('customFavicon', favicon);
         document.cookie = `customFavicon=${encodeURIComponent(favicon)}; path=/`;
       }
-
       function setFavicon(url) {
         let link = document.querySelector('link[rel="icon"]');
         if (!link) {
@@ -28,37 +27,24 @@ if ('serviceWorker' in navigator) {
         }
         link.href = url;
       }
-
       function getCookie(name) {
         const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
         return match ? decodeURIComponent(match[2]) : null;
       }
-
-      window.setCustomCloak = function(title, faviconURL) {
-        if (title) {
-          document.title = title;
-          localStorage.setItem('customTitle', title);
-          document.cookie = `customTitle=${encodeURIComponent(title)}; path=/`;
-        }
-        if (faviconURL) {
-          setFavicon(faviconURL);
-          localStorage.setItem('customFavicon', faviconURL);
-          document.cookie = `customFavicon=${encodeURIComponent(faviconURL)}; path=/`;
-        }
-      };
     })();
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Velora - Free Online Games</title>
+  <title>Velora - Free Movies & Shows</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  
   <style>
     :root {
       --bg-gradient-start: #14141f;
       --bg-gradient-end: #1f1f2f;
-      --accent-color: #4a90e2;
-      --accent-glow: rgba(74, 144, 226, 0.6);
+      --accent-color: #e50914;
+      --accent-glow: rgba(229, 9, 20, 0.6);
       --text-color: #e0e0e0;
       --card-bg: rgba(255, 255, 255, 0.05);
       --card-hover-bg: rgba(255, 255, 255, 0.1);
@@ -68,11 +54,7 @@ if ('serviceWorker' in navigator) {
       --sidebar-width: 220px;
       --topbar-height: 64px;
     }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       color: var(--text-color);
@@ -81,818 +63,374 @@ if ('serviceWorker' in navigator) {
       overflow: hidden;
       position: relative;
     }
-    #tsparticles {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
-    @keyframes shine {
-      0% { background-position: -200%; }
-      100% { background-position: 200%; }
-    }
+    #tsparticles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    
     .topbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: var(--topbar-height);
-      background: var(--glass-bg);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 24px;
-      z-index: 10;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      position: fixed; top: 0; left: 0; width: 100%; height: var(--topbar-height);
+      background: var(--glass-bg); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 24px; z-index: 10; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
-    .topbar img.logo {
-      height: 70px;
-      position: absolute;
-      left: 54px;
-      top: -3px;
-      transition: transform var(--transition-speed);
-    }
-    .topbar img.logo:hover {
-      transform: rotate(-15deg) scale(1.05);
-    }
-    .search-container {
-      flex: none;
-      margin: 0 auto;
-      width: 360px;
-      display: flex;
-      align-items: center;
-    }
+    .topbar img.logo { height: 70px; position: absolute; left: 54px; top: -3px; transition: transform var(--transition-speed); }
+    .topbar img.logo:hover { transform: rotate(-5deg) scale(1.05); }
+    
+    .search-container { flex: none; margin: 0 auto; width: 360px; display: flex; align-items: center; }
     .search-container input {
-      width: 100%;
-      padding: 8px 12px;
-      border: none;
-      border-radius: var(--border-radius) 0 0 var(--border-radius);
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-color);
-      outline: none;
-      transition: transform var(--transition-speed), background var(--transition-speed), box-shadow var(--transition-speed);
-    }
-    .search-container input:focus {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.03);
-      box-shadow: 0 0 8px var(--accent-glow);
+      width: 100%; padding: 8px 12px; border: none; border-radius: var(--border-radius) 0 0 var(--border-radius);
+      background: rgba(255, 255, 255, 0.1); color: var(--text-color); outline: none;
     }
     .search-container button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 0 var(--border-radius) var(--border-radius) 0;
-      background: var(--accent-color);
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform var(--transition-speed), background var(--transition-speed), box-shadow var(--transition-speed);
+      padding: 8px 12px; border: none; border-radius: 0 var(--border-radius) var(--border-radius) 0;
+      background: var(--accent-color); color: #fff; font-weight: 600; cursor: pointer;
     }
-    .search-container button:hover {
-      background: #6cb3f0;
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 0 8px var(--accent-glow);
-    }
-    .topbar .settings-icon {
-      height: 38px;
-      width: 38px;
-      position: absolute;
-      right: 32px;
-      top: 13px;
-      cursor: pointer;
-      transition: transform var(--transition-speed);
-      z-index: 11;
-    }
-    .topbar .settings-icon:hover {
-      transform: scale(1.12) rotate(20deg);
-    }
+
     .sidebar {
-      position: fixed;
-      top: var(--topbar-height);
-      left: 0;
-      width: var(--sidebar-width);
-      bottom: 0;
-      background: var(--glass-bg);
-      backdrop-filter: blur(8px);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow-y: auto;
-      z-index: 9;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+      position: fixed; top: var(--topbar-height); left: 0; width: var(--sidebar-width); bottom: 0;
+      background: var(--glass-bg); backdrop-filter: blur(8px); padding: 16px;
+      display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 9;
     }
     .sidebar a {
-      position: relative;
-      padding: 10px 16px;
-      color: var(--text-color);
-      text-decoration: none;
-      font-size: 14px;
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      transition: color var(--transition-speed);
+      padding: 10px 16px; color: var(--text-color); text-decoration: none; font-size: 14px;
+      border-radius: var(--border-radius); transition: 0.3s;
     }
-    .sidebar a::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -150%;
-      width: 300%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transform: skewX(-20deg);
-      transition: none;
+    .sidebar a:hover { background: var(--accent-color); color: #fff; transform: translateX(4px); }
+
+    .main { position: absolute; top: var(--topbar-height); left: var(--sidebar-width); right: 0; bottom: 0; padding: 24px; overflow-y: auto; z-index: 1; }
+    
+    /* Square Shape Grid Fix */
+    .game-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+        gap: 20px; 
     }
-    .sidebar a:hover::before {
-      animation: shine 1s forwards;
-    }
-    .sidebar a:hover {
-      background: var(--accent-color);
-      color: #fff;
-      transform: translateX(4px);
-    }
-    .main {
-      position: absolute;
-      top: var(--topbar-height);
-      left: var(--sidebar-width);
-      right: 0;
-      bottom: 0;
-      padding: 24px;
-      overflow-y: auto;
-      z-index: 1;
-    }
-    #searchResultsMessage {
-      display: none;
-      margin-bottom: 18px;
-      font-size: 1.2em;
-      color: #fff;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    }
-    .actions-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .actions-bar button,
-    .actions-bar .fav-icon {
-      background: var(--accent-color);
-      border: none;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 8px 12px;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      transition: background var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
-    }
-    .actions-bar button:hover,
-    .actions-bar .fav-icon:hover {
-      background: #6cb3f0;
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 0 8px var(--accent-glow);
-    }
-    .actions-bar .favorites-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .actions-bar .favorites-bar span {
-      font-size: 14px;
-      margin-right: 6px;
-    }
-    .actions-bar .favorites-bar img {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--border-radius);
-      object-fit: cover;
-      cursor: pointer;
-      transition: transform var(--transition-speed);
-    }
-    .actions-bar .favorites-bar img:hover {
-      transform: scale(1.1);
-    }
-    .game-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 20px;
-    }
+    
     .game-item {
-      position: relative;
-      background: var(--card-bg);
-      border: 2px solid transparent;
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform var(--transition-speed), box-shadow var(--transition-speed), border-color var(--transition-speed), background var(--transition-speed);
+      position: relative; background: var(--card-bg); border: 2px solid transparent;
+      border-radius: var(--border-radius); overflow: hidden; cursor: pointer; transition: 0.3s;
+      aspect-ratio: 2 / 3; /* Forces a consistent poster shape */
     }
-    .game-item:hover {
-      transform: translateY(-8px) scale(1.05);
-      box-shadow:
-        0 8px 16px rgba(0,0,0,0.5),
-        0 0 12px var(--accent-glow),
-        0 0 24px var(--accent-glow);
-      border-color: var(--accent-color);
-      background: var(--card-hover-bg);
-    }
-    .game-item img {
-      width: 100%;
-      height: auto;
-      display: block;
-      filter: brightness(0.95);
-      transition: filter var(--transition-speed);
-    }
-    .game-item img:hover {
-      filter: brightness(1);
-    }
+    .game-item:hover { transform: translateY(-8px); border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
+    .game-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     .game-item::after {
-      content: attr(data-title);
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      padding: 6px 8px;
-      background: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      font-size: 14px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(100%);
-      transition: transform var(--transition-speed), opacity var(--transition-speed);
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
+      content: attr(data-title); position: absolute; bottom: 0; left: 0; width: 100%;
+      padding: 10px; background: rgba(0, 0, 0, 0.8); color: #fff; font-size: 14px;
+      text-align: center; opacity: 0; transition: 0.3s;
     }
-    .game-item:hover::after {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .game-item .heart {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      font-size: 22px;
-      color: rgba(255, 0, 0, 0.8);
-      cursor: pointer;
-      opacity: 0.9;
-      user-select: none;
-      transition: transform var(--transition-speed), text-shadow var(--transition-speed);
-      z-index: 2;
-    }
-    .game-item .heart:hover {
-      transform: scale(1.2);
-      text-shadow: 0 0 6px rgba(255, 0, 0, 0.8);
-    }
-    .game-item.hidden {
-      display: none !important;
-    }
+    .game-item:hover::after { opacity: 1; }
+    .game-item .heart { position: absolute; top: 8px; right: 8px; font-size: 22px; color: #ff0000; z-index: 2; }
 
-    /* Mobile-detection modal styles */
+    .favorites-bar img { width: 40px; height: 55px; border-radius: 4px; object-fit: cover; cursor: pointer; margin: 0 4px; }
+    .actions-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .actions-bar button { background: var(--accent-color); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    
     .hidden { display: none !important; }
-    .mobile-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.65);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      padding: 20px;
-    }
-    .mobile-modal {
-      width: 100%;
-      max-width: 420px;
-      background: linear-gradient(180deg, rgba(30,30,45,0.98), rgba(20,20,30,0.98));
-      border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
-      text-align: center;
-      color: var(--text-color);
-      border: 1px solid rgba(255,255,255,0.04);
-    }
-    .mobile-modal h2 {
-      font-size: 20px;
-      margin-bottom: 10px;
-      letter-spacing: 0.2px;
-    }
-    .mobile-modal p {
-      font-size: 14px;
-      margin-bottom: 18px;
-      color: #d9d9d9;
-    }
-    .mobile-modal .modal-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-    }
-    .mobile-modal button {
-      padding: 10px 16px;
-      font-weight: 700;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      background: var(--accent-color);
-      color: #fff;
-      transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-    }
-    .mobile-modal button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 10px var(--accent-glow);
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 60px;
-        padding: 8px;
-      }
-      .sidebar a {
-        font-size: 12px;
-        padding: 8px;
-      }
-      .topbar {
-        padding: 0 16px;
-      }
-      .search-container input {
-        width: 200px;
-      }
-      .actions-bar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .actions-bar button,
-      .actions-bar .fav-icon {
-        width: 100%;
-      }
-      .topbar .settings-icon {
-        right: 8px;
-        top: 13px;
-      }
-    }
   </style>
 </head>
 <body>
   <div id="tsparticles"></div>
+  
   <div class="topbar">
-    <a href="pico.html">
-      <img src="images/icons/velora.png" alt="Logo" class="logo" style="cursor: pointer;">
-    </a>
+    <a href="index.html"><img src="images/icons/velora.png" alt="Logo" class="logo"></a>
     <div class="search-container">
-      <input type="text" id="searchInput" onkeyup="searchGames()" placeholder="Search games...">
-      <button onclick="searchGames()">Go</button>
+      <input type="text" id="searchInput" onkeyup="searchMovies()" placeholder="Search movies or shows...">
+      <button onclick="searchMovies()">Search</button>
     </div>
-  <a href="settings.html">
-  <img src="images/icons/settings.png" alt="Settings" class="settings-icon">
-</a>
+    <a href="settings.html"><img src="images/icons/settings.png" alt="Settings" style="height:35px; position:absolute; right:30px; top:15px;"></a>
   </div>
+
   <div class="sidebar">
-    <a href="#" onclick="filterGames('')" title="Show All">🎈 - All Games</a>
-    <a href="#" onclick="filterGames('action')" title="Action">🎮 - Action</a>
-    <a href="#" onclick="filterGames('shooter')" title="Shooter">🔫 - Shooters</a>
-    <a href="#" onclick="filterGames('sports')" title="Sports">🏈 - Sports</a>
-    <a href="#" onclick="filterGames('puzzle')" title="Puzzle">🧩 - Puzzle</a>
-    <a href="#" onclick="filterGames('horror')" title="Horror">👻 - Horror</a>
-    <a href="#" onclick="filterGames('car')" title="Car">🚗 - Car</a>
+    <a href="#" onclick="filterMovies('')">🎬 - All Movies</a>
+    <a href="#" onclick="filterMovies('action')">💥 - Action</a>
+    <a href="#" onclick="filterMovies('horror')">👻 - Horror</a>
+    <a href="#" onclick="filterMovies('comedy')">😂 - Comedy</a>
+    <a href="#" onclick="filterMovies('scifi')">🚀 - Sci-Fi</a>
+    <a href="#" onclick="filterMovies('drama')">🎭 - Drama</a>
   </div>
+
   <div class="main">
-    <div id="searchResultsMessage"></div>
     <div class="actions-bar">
-      <button id="randomBtn">🎲 Random Game</button>
+      <button id="randomBtn">🎲 Surprise Movie</button>
       <div class="favorites-bar">
-        <span>❤️ Favorites:</span>
-        <div id="favoriteIcons"></div>
+        <span>❤️ Watchlist:</span>
+        <div id="favoriteIcons" style="display:inline-block; vertical-align:middle; margin-left:10px;"></div>
       </div>
     </div>
-    <div class="game-grid" id="gameGrid">
-     <div class="game-item" data-title="1v1.lol" data-game="games/1v1.html" data-icon="images/icons/1v1.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/1v1.png" alt="1v1.lol action shooter" onclick="openFullscreenGame('games/1v1.html')">
-      </div>
-      <div class="game-item" data-title="Rocket League" data-game="games/rl.html" data-icon="images/icons/rl.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/rl.webp" alt="Rocket League sports action" onclick="openFullscreenGame('games/rl.html')">
-      </div>
-      <div class="game-item" data-title="Escape Road 1" data-game="games/er1.html" data-icon="images/icons/er1.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/er1.webp" alt="Escape Road 1 action car endless" onclick="openFullscreenGame('games/er1.html')">
-      </div>
-      <div class="game-item" data-title="Escape Road 2" data-game="games/clescaperoad2.html" data-icon="images/icons/er2.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/er2.jpg" alt="Escape Road 2 action car endless" onclick="openFullscreenGame('games/clescaperoad2.html')">
-      </div>
-      <div class="game-item" data-title="Flying Kong" data-game="games/kong.html" data-icon="images/icons/kong.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/kong.png" alt="Flying Kong arcade" onclick="openFullscreenGame('games/kong.html')">
-      </div>
-      <div class="game-item" data-title="BitLife Simulator" data-game="games/bitlife.html" data-icon="images/icons/bitlife.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/bitlife.png" alt="BitLife Simulator" onclick="openFullscreenGame('games/bitlife.html')">
-      </div>
-      <div class="game-item" data-title="Geometry Dash" data-game="games/geometry.html" data-icon="images/icons/geometry.svg.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/geometry.svg.png" alt="Geometry Dash action" onclick="openFullscreenGame('games/geometry.html')">
-      </div>
-      <div class="game-item" data-title="Minecraft EagleCraft" data-game="games/Shadow_Client.html" data-icon="images/icons/craft.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/craft.png" alt="Minecraft eaglercraft action simulator" onclick="openFullscreenGame('games/Shadow_Client.html')">
-      </div>
-      <div class="game-item" data-title="Skibidi Backrooms" data-game="games/skibidi.html" data-icon="images/icons/skibidi.avif">
-        <div class="heart">♡</div>
-        <img src="images/icons/skibidi.avif" alt="Skibidi Backrooms horror" onclick="openFullscreenGame('games/skibidi.html')">
-      </div>
-      <div class="game-item" data-title="Boxels" data-game="games/clsandboxels.html" data-icon="images/icons/boxels.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/boxels.webp" alt="Sandboxels simulator" onclick="openFullscreenGame('games/clsandboxels.html')">
-      </div>
-      <div class="game-item" data-title="Slope" data-game="games/slope.html" data-icon="images/icons/slope.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/slope.png" alt="Slope arcade" onclick="openFullscreenGame('games/slope.html')">
-      </div>
-      <div class="game-item" data-title="Happy Wheels" data-game="games/happy.html" data-icon="images/icons/happy.jpeg">
-        <div class="heart">♡</div>
-        <img src="images/icons/happy.jpeg" alt="Happy Wheels action levels" onclick="openFullscreenGame('games/happy.html')">
-      </div>
-      <div class="game-item" data-title="Tiny Fishing" data-game="games/tiny.html" data-icon="images/icons/tiny.avif">
-        <div class="heart">♡</div>
-        <img src="images/icons/tiny.avif" alt="Tiny Fishing simulator" onclick="openFullscreenGame('games/tiny.html')">
-      </div>
-      <div class="game-item" data-title="Ragdoll Hit" data-game="games/rhit.html" data-icon="images/icons/rhit.avif">
-        <div class="heart">♡</div>
-        <img src="images/icons/rhit.avif" alt="Ragdoll Hit arcade action" onclick="openFullscreenGame('games/rhit.html')">
-      </div>
-      <div class="game-item" data-title="Ragdoll Archers" data-game="games/ra.html" data-icon="images/icons/ra.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/ra.webp" alt="Ragdoll Archers arcade action" onclick="openFullscreenGame('games/ra.html')">
-      </div>
-      <div class="game-item" data-title="Bowmasters" data-game="games/bowmasters.html" data-icon="images/icons/bowmasters.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/bowmasters.png" alt="Bowmasters shooter arcade" onclick="openFullscreenGame('games/bowmasters.html')">
-      </div>
-      <div class="game-item" data-title="Basketball Legends" data-game="games/bl.html" data-icon="images/icons/bl.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/bl.png" alt="Basketball Legends sports" onclick="openFullscreenGame('games/bl.html')">
-      </div>
-      <div class="game-item" data-title="Agar.io Lite" data-game="games/agar.html" data-icon="images/icons/agar.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/agar.jpg" alt="Agar.io Lite arcade endless" onclick="openFullscreenGame('games/agar.html')">
-      </div>
-      <div class="game-item" data-title="Amazing Strange Rope Police" data-game="games/rope.html" data-icon="images/icons/police.avif">
-        <div class="heart">♡</div>
-        <img src="images/icons/police.avif" alt="Amazing Strange Rope Police action simulator" onclick="openFullscreenGame('games/rope.html')">
-      </div>
-      <div class="game-item" data-title="Baldi’s Basics" data-game="games/baldi.html" data-icon="images/icons/baldi.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/baldi.jpg" alt="Baldi’s Basics horror" onclick="openFullscreenGame('games/baldi.html')">
-      </div>
-      <div class="game-item" data-title="Drift Hunters" data-game="games/drift.html" data-icon="images/icons/drift.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/drift.png" alt="Drift Hunters car" onclick="openFullscreenGame('games/drift.html')">
-      </div>
-      <div class="game-item" data-title="Granny 1" data-game="games/granny1.html" data-icon="images/icons/granny1.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/granny1.jpg" alt="Granny 1 horror" onclick="openFullscreenGame('games/granny1.html')">
-      </div>
-      <div class="game-item" data-title="Granny 2" data-game="games/granny2.html" data-icon="images/icons/granny2.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/granny2.webp" alt="Granny 2 horror" onclick="openFullscreenGame('games/granny2.html')">
-      </div>
-      <div class="game-item" data-title="Friday Night Funkin'" data-game="games/fnf.html" data-icon="images/icons/fnf.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/fnf.png" alt="Friday Night Funkin' levels action" onclick="openFullscreenGame('games/fnf.html')">
-      </div>
-      <div class="game-item" data-title="Drive Mad" data-game="games/mad.html" data-icon="images/icons/drive-mad.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/drive-mad.png" alt="Drive Mad puzzle car levels" onclick="openFullscreenGame('games/mad.html')">
-      </div>
-      <div class="game-item" data-title="Snow Rider 3D" data-game="games/snowrider.html" data-icon="images/icons/snow.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/snow.png" alt="Snow Rider 3D endless" onclick="openFullscreenGame('games/snowrider.html')">
-      </div>
-      <div class="game-item" data-title="Sonic Revert" data-game="games/revert.html" data-icon="images/icons/revert.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/revert.png" alt="Sonic Revert endless simuator" onclick="openFullscreenGame('games/revert.html')">
-      </div>
-      <div class="game-item" data-title="Drift Boss" data-game="games/driftboss.html" data-icon="images/icons/driftboss.avif">
-        <div class="heart">♡</div>
-        <img src="images/icons/driftboss.avif" alt="Drift Boss endless" onclick="openFullscreenGame('games/driftboss.html')">
-      </div>
-      <div class="game-item" data-title="Block Blast" data-game="games/blockblast.html" data-icon="images/icons/blockblast.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/blockblast.png" alt="Block Blast endless puzzle" onclick="openFullscreenGame('games/blockblast.html')">
-      </div>
-      <div class="game-item" data-title="Elastic Face" data-game="games/elasticface.html" data-icon="images/icons/elasticface.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/elasticface.webp" alt="Elastic Face simulator" onclick="openFullscreenGame('games/elasticface.html')">
-      </div>
-      <div class="game-item" data-title="Clash Royale" data-game="games/clclashofvikings.html" data-icon="images/icons/clash.jpeg">
-        <div class="heart">♡</div>
-        <img src="images/icons/clash.jpeg" alt="Clash royale action puzzle" onclick="openFullscreenGame('games/clclashofvikings.html')">
-      </div>
-      <div class="game-item" data-title="Cluster Rush" data-game="games/cluster.html" data-icon="images/icons/cluster.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/cluster.png" alt="Cluster Rush levels" onclick="openFullscreenGame('games/cluster.html')">
-      </div>
-      <div class="game-item" data-title="Crossy Road" data-game="games/crossyroad.html" data-icon="images/icons/crossy.avif">
-        <div class="heart">♡</div>
-        <img src="images/icons/crossy.avif" alt="Crossy Road endless" onclick="openFullscreenGame('games/crossyroad.html')">
-      </div>
-      <div class="game-item" data-title="10 Minutes Till Dawn" data-game="games/10.html" data-icon="images/icons/10.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/10.png" alt="10 Minutes Till Dawn action" onclick="openFullscreenGame('games/10.html')">
-      </div>
-      <div class="game-item" data-title="Infinite Craft" data-game="games/infinitecraft.html" data-icon="images/icons/infinitecraft.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/infinitecraft.webp" alt="Infinite Craft endless" onclick="openFullscreenGame('games/infinitecraft.html')">
-      </div>
-      <div class="game-item" data-title="Bad Parenting" data-game="games/badparent.html" data-icon="images/icons/badparent.avif">
-        <div class="heart">♡</div>
-        <img src="images/icons/badparent.avif" alt="Bad Parenting horror" onclick="openFullscreenGame('games/badparent.html')">
-      </div>
-      <div class="game-item" data-title="Guess Their Answer" data-game="games/guess.html" data-icon="images/icons/guess.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/guess.png" alt="Guess Their Answer levels" onclick="openFullscreenGame('games/guess.html')">
-      </div>
-      <div class="game-item" data-title="Bacon May Die" data-game="games/bacon.html" data-icon="images/icons/bacon.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/bacon.png" alt="Bacon May Die endless" onclick="openFullscreenGame('games/bacon.html')">
-      </div>
-      <div class="game-item" data-title="Bottle Flip 3D" data-game="games/bottle.html" data-icon="images/icons/bottle.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/bottle.png" alt="Bottle Flip 3D levels" onclick="openFullscreenGame('games/bottle.html')">
-      </div>
-      <div class="game-item" data-title="A Small World Cup" data-game="games/cup.html" data-icon="images/icons/cup.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/cup.png" alt="A Small World Cup levels endless sports" onclick="openFullscreenGame('games/cup.html')">
-      </div>
-      <div class="game-item" data-title="Crazy Cattle 3D" data-game="games/cattle.html" data-icon="images/icons/cattle.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/cattle.jpg" alt="Crazy Cattle 3D action sports" onclick="openFullscreenGame('games/cattle.html')">
-      </div>
-      <div class="game-item" data-title="Flood Runner 4" data-game="games/flood.html" data-icon="images/icons/flood.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/flood.webp" alt="Flood Runner 4 action" onclick="openFullscreenGame('games/flood.html')">
-      </div>
-      <div class="game-item" data-title="Blockpost" data-game="games/post.html" data-icon="images/icons/post.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/post.png" alt="blockpost action shooter" onclick="openFullscreenGame('games/post.html')">
-      </div>
-      <div class="game-item" data-title="Suika Watermelon" data-game="games/suika.html" data-icon="images/icons/suika.avif">
-        <div class="heart">♡</div>
-        <img src="images/icons/suika.avif" alt="suika watermelon game endless" onclick="openFullscreenGame('games/suika.html')">
-      </div>
-      <div class="game-item" data-title="Lego Star Wars" data-game="games/wars.html" data-icon="images/icons/wars.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/wars.webp" alt="lego star wars action" onclick="openFullscreenGame('games/wars.html')">
-      </div>
-      <div class="game-item" data-title="Cartoon Network Tennis" data-game="games/cn.html" data-icon="images/icons/cn.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/cn.webp" alt="cartoon network tennis sports endless" onclick="openFullscreenGame('games/cn.html')">
-      </div>
-      <div class="game-item" data-title="Dude Theft Wars (DTA6)" data-game="dta6/index.html" data-icon="images/icons/dta6.avif">
-        <div class="heart">♡</div>
-        <img src="images/icons/dta6.avif" alt="Dude theft wars dta6 gta6 car action" onclick="openFullscreenGame('dta6/index.html')">
-      </div>
-      <div class="game-item" data-title="Stickman RPG" data-game="games/stickrpg.html" data-icon="images/icons/stickrpg.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/stickrpg.webp" alt="stickman rpg simulator" onclick="openFullscreenGame('games/stickrpg.html')">
-      </div>
-      <div class="game-item" data-title="Plants vs Zombies" data-game="games/plant.html" data-icon="images/icons/plant.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/plant.jpg" alt="plants vs zombies levels" onclick="openFullscreenGame('games/plant.html')">
-      </div>
-      <div class="game-item" data-title="OVO 1" data-game="games/ovo1.html" data-icon="images/icons/ovo1.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/ovo1.jpg" alt="OVO 1 action levels" onclick="openFullscreenGame('games/ovo1.html')">
-      </div>
-      <div class="game-item" data-title="OVO 2" data-game="games/ovo2.html" data-icon="images/icons/ovo2.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/ovo2.jpg" alt="OVO 2 action levels" onclick="openFullscreenGame('games/ovo2.html')">
-      </div>
-      <div class="game-item" data-title="OVO 3" data-game="games/ovo3.html" data-icon="images/icons/ovo3.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/ovo3.png" alt="OVO 3 action levels" onclick="openFullscreenGame('games/ovo3.html')">
-      </div>
-      <div class="game-item" data-title="Attack Hole" data-game="games/ahole.html" data-icon="images/icons/ahole.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/ahole.jpg" alt="attack hole levels" onclick="openFullscreenGame('games/ahole.html')">
-      </div>
-      <div class="game-item" data-title="Burrito Bison" data-game="games/bison.html" data-icon="images/icons/bison.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/bison.jpg" alt="burrito bison endless" onclick="openFullscreenGame('games/bison.html')">
-      </div>
-      <div class="game-item" data-title="Capybara Clicker" data-game="games/cc.html" data-icon="images/icons/cc.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/cc.png" alt="capybara clicker endless" onclick="openFullscreenGame('games/cc.html')">
-      </div>
-      <div class="game-item" data-title="Folder Dungeon" data-game="games/folder.html" data-icon="images/icons/folder.webp">
-        <div class="heart">♡</div>
-        <img src="images/icons/folder.webp" alt="folder dungeon puzzle" onclick="openFullscreenGame('games/folder.html')">
-      </div>
-      <div class="game-item" data-title="Evil Glitch" data-game="games/evilglitch.html" data-icon="images/icons/evilglitch.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/evilglitch.jpg" alt="evil glitch endless" onclick="openFullscreenGame('games/evilglitch.html')">
-      </div>
-      <div class="game-item" data-title="Hill Climb Racing" data-game="games/hcr.html" data-icon="images/icons/hcr.png">
-        <div class="heart">♡</div>
-        <img src="images/icons/hcr.png" alt="hill climb racing endless" onclick="openFullscreenGame('games/hcr.html')">
-      </div>
-      <div class="game-item" data-title="Tanuki Sunset" data-game="games/tanuki.html" data-icon="images/icons/tanuki.jpg">
-        <div class="heart">♡</div>
-        <img src="images/icons/tanuki.jpg" alt="tanuki sunset car action sport endless" onclick="openFullscreenGame('games/tanuki.html')">
-      </div><div class="game-item" data-title="Slide in the Woods" data-game="games/woods.html" data-icon="images/icons/woods.webp"><div class="heart">♡</div><img src="images/icons/woods.webp" alt="slide in the woods horror" onclick="openFullscreenGame('games/woods.html')">
-    
-      </div><div class="game-item" data-title="Are We There Yet?" data-game="games/yet.html" data-icon="images/icons/yet.png"><div class="heart">♡</div><img src="images/icons/yet.png" alt="are we there yet? car" onclick="openFullscreenGame('games/yet.html')">
 
-      </div><div class="game-item" data-title="The Binding of Isaac" data-game="games/cltboilambeternal.html" data-icon="images/icons/IMG_0806.jpeg"><div class="heart">♡</div><img src="images/icons/IMG_0806.jpeg" alt="binding of isaac horror" onclick="openFullscreenGame('games/cltboilambeternal.html')">
-    </div>
-  </div>
-
-  <!-- Mobile-detection modal -->
-  <div id="mobileModal" class="mobile-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="mobileModalTitle" aria-describedby="mobileModalDesc">
-    <div class="mobile-modal" role="document">
-      <h2 id="mobileModalTitle">Mobile device detected</h2>
-      <p id="mobileModalDesc">Note: Velora is not 100% supported on mobile devices. Click OK to continue.</p>
-      <div class="modal-actions">
-        <button id="mobileModalOk">OK</button>
-      </div>
+    <div class="game-grid" id="movieGrid">
+        <div class="game-item" data-title="The CupHead Show" data-movie="https://drive.google.com/drive/folders/1j_K1YV4w_sHAzwEAaUMl-qSk4qjrYSJ_" data-icon="images/posters/cuphead.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/cuphead.jpg" alt="The CupHead Show" onclick="openMovie('https://drive.google.com/drive/folders/1j_K1YV4w_sHAzwEAaUMl-qSk4qjrYSJ_')">
+        </div>
+        <div class="game-item" data-title="Five Nights at Freddy's" data-movie="https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY" data-icon="images/posters/fnaf.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/fnaf.jpg" alt="Five Nights at Freddy's" onclick="openMovie('https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY')">
+        </div>
+        <div class="game-item" data-title="Kirby: Right Back At Ya!" data-movie="https://drive.google.com/drive/u/0/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw" data-icon="images/posters/kirby.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kirby.jpg" alt="Kirby: Right Back At Ya!" onclick="openMovie('https://drive.google.com/drive/u/0/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw')">
+        </div>
+        <div class="game-item" data-title="Smiling Critters Series" data-movie="https://drive.google.com/drive/folders/1rkjwmHMR8j2nqD2DmM2qHt1vVRmNwrXd" data-icon="images/posters/smiling_critters.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/smiling_critters.jpg" alt="Smiling Critters Series" onclick="openMovie('https://drive.google.com/drive/folders/1rkjwmHMR8j2nqD2DmM2qHt1vVRmNwrXd')">
+        </div>
+        <div class="game-item" data-title="Pok&eacute;mon series" data-movie="https://drive.google.com/drive/folders/1I7-ZUInlg9jb4R6LGq0qX3n7bjGKPFFO" data-icon="images/posters/pokemon_series.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/pokemon_series.jpg" alt="Pok&eacute;mon series" onclick="openMovie('https://drive.google.com/drive/folders/1I7-ZUInlg9jb4R6LGq0qX3n7bjGKPFFO')">
+        </div>
+        <div class="game-item" data-title="Mewtwo Strikes Back" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/mewtwo_strikes_back.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/mewtwo_strikes_back.jpg" alt="Mewtwo Strikes Back" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
+        </div>
+        <div class="game-item" data-title="Mewtwo Returns" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/mewtwo_returns.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/mewtwo_returns.jpg" alt="Mewtwo Returns" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
+        </div>
+        <div class="game-item" data-title="Pokemon The Movie 2000" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/pokemon_2000.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/pokemon_2000.jpg" alt="Pokemon The Movie 2000" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
+        </div>
+        <div class="game-item" data-title="Spell of the Unown" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/spell_of_unown.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/spell_of_unown.jpg" alt="Spell of the Unown" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
+        </div>
+        <div class="game-item" data-title="Celebi: Voice of the Forest" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/celebi.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/celebi.jpg" alt="Celebi: Voice of the Forest" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
+        </div>
+        <div class="game-item" data-title="Jirachi Wish Maker" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/jirachi.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/jirachi.jpg" alt="Jirachi Wish Maker" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
+        </div>
+        <div class="game-item" data-title="I Choose You!" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/i_choose_you.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/i_choose_you.jpg" alt="I Choose You!" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
+        </div>
+        <div class="game-item" data-title="The Power of Us" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/power_of_us.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/power_of_us.jpg" alt="The Power of Us" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
+        </div>
+        <div class="game-item" data-title="The Garfield Movie" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/garfield_movie.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/garfield_movie.jpg" alt="The Garfield Movie" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
+        </div>
+        <div class="game-item" data-title="Garfield: A Tail of Two Kitties" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/garfield_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/garfield_2.jpg" alt="Garfield: A Tail of Two Kitties" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
+        </div>
+        <div class="game-item" data-title="Dog Man 2025" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/dog_man.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/dog_man.jpg" alt="Dog Man 2025" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
+        </div>
+        <div class="game-item" data-title="Diary of a Wimpy Kid Collection" data-movie="https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV" data-icon="images/posters/wimpy_kid.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/wimpy_kid.jpg" alt="Diary of a Wimpy Kid Collection" onclick="openMovie('https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV')">
+        </div>
+        <div class="game-item" data-title="Mewtwo Strikes Back Evolution" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/mewtwo_evolution.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/mewtwo_evolution.jpg" alt="Mewtwo Strikes Back Evolution" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
+        </div>
+        <div class="game-item" data-title="Detective Pikachu" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/detective_pikachu.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/detective_pikachu.jpg" alt="Detective Pikachu" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
+        </div>
+        <div class="game-item" data-title="The Super Mario Bros. Movie" data-movie="https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY" data-icon="images/posters/mario_movie.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/mario_movie.jpg" alt="The Super Mario Bros. Movie" onclick="openMovie('https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY')">
+        </div>
+        <div class="game-item" data-title="Sonic the Hedgehog" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/sonic_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/sonic_1.jpg" alt="Sonic the Hedgehog" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
+        </div>
+        <div class="game-item" data-title="Sonic the Hedgehog 2" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/sonic_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/sonic_2.jpg" alt="Sonic the Hedgehog 2" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
+        </div>
+        <div class="game-item" data-title="Sonic the Hedgehog 3" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/sonic_3.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/sonic_3.jpg" alt="Sonic the Hedgehog 3" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
+        </div>
+        <div class="game-item" data-title="Knuckles Series" data-movie="https://drive.google.com/drive/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw" data-icon="images/posters/knuckles.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/knuckles.jpg" alt="Knuckles Series" onclick="openMovie('https://drive.google.com/drive/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw')">
+        </div>
+        <div class="game-item" data-title="Despicable Me" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/despicable_me_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/despicable_me_1.jpg" alt="Despicable Me" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
+        </div>
+        <div class="game-item" data-title="Despicable Me 2" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/despicable_me_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/despicable_me_2.jpg" alt="Despicable Me 2" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
+        </div>
+        <div class="game-item" data-title="Despicable Me 3" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/despicable_me_3.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/despicable_me_3.jpg" alt="Despicable Me 3" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
+        </div>
+        <div class="game-item" data-title="Despicable Me 4" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/despicable_me_4.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/despicable_me_4.jpg" alt="Despicable Me 4" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
+        </div>
+        <div class="game-item" data-title="Minions" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/minions.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/minions.jpg" alt="Minions" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
+        </div>
+        <div class="game-item" data-title="Minions: The Rise of Gru" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/minions_rise_of_gru.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/minions_rise_of_gru.jpg" alt="Minions: The Rise of Gru" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
+        </div>
+        <div class="game-item" data-title="Inside Out" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/inside_out_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/inside_out_1.jpg" alt="Inside Out" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
+        </div>
+        <div class="game-item" data-title="Inside Out 2" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/inside_out_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/inside_out_2.jpg" alt="Inside Out 2" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
+        </div>
+        <div class="game-item" data-title="Kung Fu Panda" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/kung_fu_panda_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kung_fu_panda_1.jpg" alt="Kung Fu Panda" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
+        </div>
+        <div class="game-item" data-title="Kung Fu Panda 2" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/kung_fu_panda_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kung_fu_panda_2.jpg" alt="Kung Fu Panda 2" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
+        </div>
+        <div class="game-item" data-title="Kung Fu Panda 3" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/kung_fu_panda_3.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kung_fu_panda_3.jpg" alt="Kung Fu Panda 3" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
+        </div>
+        <div class="game-item" data-title="Kung Fu Panda 4" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/kung_fu_panda_4.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kung_fu_panda_4.jpg" alt="Kung Fu Panda 4" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
+        </div>
+        <div class="game-item" data-title="Shrek" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/shrek_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/shrek_1.jpg" alt="Shrek" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
+        </div>
+        <div class="game-item" data-title="Shrek 2" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/shrek_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/shrek_2.jpg" alt="Shrek 2" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
+        </div>
+        <div class="game-item" data-title="Shrek the Third" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/shrek_3.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/shrek_3.jpg" alt="Shrek the Third" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
+        </div>
+        <div class="game-item" data-title="Shrek Forever After" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/shrek_4.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/shrek_4.jpg" alt="Shrek Forever After" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
+        </div>
+        <div class="game-item" data-title="Puss in Boots" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/puss_in_boots_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/puss_in_boots_1.jpg" alt="Puss in Boots" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
+        </div>
+        <div class="game-item" data-title="Puss in Boots: The Last Wish" data-movie="https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV" data-icon="images/posters/puss_in_boots_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/puss_in_boots_2.jpg" alt="Puss in Boots: The Last Wish" onclick="openMovie('https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV')">
+        </div>
+        <div class="game-item" data-title="Diary of a Wimpy Kid (2010)" data-movie="https://drive.google.com/file/d/17w033Yh8D-v8r_G3I9R1vB2L0zX4S9Uf" data-icon="images/posters/wimpy_kid_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/wimpy_kid_1.jpg" alt="Diary of a Wimpy Kid (2010)" onclick="openMovie('https://drive.google.com/file/d/17w033Yh8D-v8r_G3I9R1vB2L0zX4S9Uf')">
+        </div>
+        <div class="game-item" data-title="Rodrick Rules" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/rodrick_rules.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/rodrick_rules.jpg" alt="Rodrick Rules" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
+        </div>
+        <div class="game-item" data-title="Dog Days" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/dog_days.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/dog_days.jpg" alt="Dog Days" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
+        </div>
+        <div class="game-item" data-title="The Long Haul" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/long_haul.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/long_haul.jpg" alt="The Long Haul" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
+        </div>
+        <div class="game-item" data-title="Deadpool & Wolverine" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/deadpool_wolverine.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/deadpool_wolverine.jpg" alt="Deadpool & Wolverine" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
+        </div>
+        <div class="game-item" data-title="Spider-Man: Across the Spider-Verse" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/spiderverse.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/spiderverse.jpg" alt="Spider-Man: Across the Spider-Verse" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
+        </div>
+        <div class="game-item" data-title="The Batman" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/the_batman.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/the_batman.jpg" alt="The Batman" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
+        </div>
     </div>
   </div>
 
   <script>
     tsParticles.load("tsparticles", {
-      fpsLimit: 60,
-      background: { color: "transparent" },
-      particles: {
-        number: { value: 80 },
-        color: { value: "#ffffff" },
-        shape: { type: "circle" },
-        opacity: { value: 0.5 },
-        size: { value: { min: 1, max: 3 } },
-        move: { enable: true, speed: 1, outModes: { default: "out" } }
-      },
-      interactivity: {
-        events: { onClick: { enable: true, mode: "push" } },
-        modes: { push: { quantity: 4 } }
-      },
-      detectRetina: true
-    });
-    const FAVORITES_KEY = 'veloraFavorites'; 
-    function getFavorites() {
-      return JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
-    }
-    function saveFavorites(arr) {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(arr));
-    }
-    function isFavorited(gamePath) {
-      return getFavorites().includes(gamePath);
-    }
-    function toggleFavorite(gamePath, iconSrc) {
-      let favs = getFavorites();
-      if (favs.includes(gamePath)) {
-        favs = favs.filter(g => g !== gamePath);
-      } else {
-        favs.push(gamePath);
+      fpsLimit: 60, particles: {
+        number: { value: 60 }, color: { value: "#ffffff" },
+        opacity: { value: 0.3 }, size: { value: { min: 1, max: 2 } },
+        move: { enable: true, speed: 0.8 }
       }
+    });
+
+    const WATCHLIST_KEY = 'veloraWatchlist';
+    function getFavorites() { return JSON.parse(localStorage.getItem(WATCHLIST_KEY) || '[]'); }
+    function saveFavorites(arr) { localStorage.setItem(WATCHLIST_KEY, JSON.stringify(arr)); }
+
+    function toggleFavorite(moviePath) {
+      let favs = getFavorites();
+      favs = favs.includes(moviePath) ? favs.filter(m => m !== moviePath) : [...favs, moviePath];
       saveFavorites(favs);
       renderFavoritesBar();
       updateAllHearts();
     }
+
     function renderFavoritesBar() {
       const container = document.getElementById('favoriteIcons');
-      container.innerHTML = ''; 
-      const favs = getFavorites();
-      favs.forEach(gamePath => {
-        const tile = Array.from(document.querySelectorAll('.game-item'))
-                          .find(el => el.getAttribute('data-game') === gamePath);
-        if (tile) {
-          const iconURL = tile.getAttribute('data-icon');
+      container.innerHTML = '';
+      getFavorites().forEach(path => {
+        const item = document.querySelector(`[data-movie="${path}"]`);
+        if (item) {
           const img = document.createElement('img');
-          img.src = iconURL;
-          img.title = tile.getAttribute('data-title');
-          img.onclick = () => openFullscreenGame(gamePath);
+          img.src = item.getAttribute('data-icon');
+          img.onclick = () => openMovie(path);
           container.appendChild(img);
         }
       });
     }
+
     function updateAllHearts() {
       document.querySelectorAll('.game-item').forEach(item => {
-        const gamePath = item.getAttribute('data-game');
-        const heartEl = item.querySelector('.heart');
-        if (isFavorited(gamePath)) {
-          heartEl.textContent = '❤';
-        } else {
-          heartEl.textContent = '♡';
-        }
+        const path = item.getAttribute('data-movie');
+        item.querySelector('.heart').textContent = getFavorites().includes(path) ? '❤' : '♡';
       });
     }
+
+    function searchMovies() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      document.querySelectorAll(".game-item").forEach(item => {
+        const text = item.querySelector("img").alt.toLowerCase();
+        item.style.display = text.includes(input) ? "block" : "none";
+      });
+    }
+
+    function filterMovies(term) {
+      document.getElementById("searchInput").value = term;
+      searchMovies();
+    }
+
+    function openMovie(path) {
+      window.location.href = path;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.game-item .heart').forEach(heart => {
-        const parent = heart.closest('.game-item');
-        const gamePath = parent.getAttribute('data-game');
-        const iconURL = parent.getAttribute('data-icon');
-        heart.addEventListener('click', e => {
+        heart.addEventListener('click', (e) => {
           e.stopPropagation();
-          toggleFavorite(gamePath, iconURL);
+          toggleFavorite(heart.parentElement.getAttribute('data-movie'));
         });
       });
+
+      document.getElementById('randomBtn').addEventListener('click', () => {
+        const items = Array.from(document.querySelectorAll('.game-item:not([style*="display: none"])'));
+        if (items.length) openMovie(items[Math.floor(Math.random() * items.length)].getAttribute('data-movie'));
+      });
+
       updateAllHearts();
       renderFavoritesBar();
-    });
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('randomBtn').addEventListener('click', () => {
-        const allTiles = Array.from(document.querySelectorAll('.game-item'));
-        const visibleTiles = allTiles.filter(t => t.style.display !== 'none');
-        if (visibleTiles.length === 0) return;
-        const pick = visibleTiles[Math.floor(Math.random() * visibleTiles.length)];
-        const gamePath = pick.getAttribute('data-game');
-        openFullscreenGame(gamePath);
-      });
-    });
-    function searchGames() {
-      const input = document.getElementById("searchInput").value.trim().toLowerCase();
-      const messageDiv = document.getElementById("searchResultsMessage");
-      if (input) {
-        messageDiv.textContent = `🔍 Results for '${input}'`;
-        messageDiv.style.display = "block";
-      } else {
-        messageDiv.textContent = "";
-        messageDiv.style.display = "none";
-      }
-      document.querySelectorAll(".game-item").forEach(item => {
-        const alt = item.querySelector("img").alt.toLowerCase();
-        item.style.display = alt.includes(input) ? "block" : "none";
-      });
-      renderFavoritesBar();
-    }
-    function filterGames(term) {
-      document.getElementById("searchInput").value = term;
-      searchGames();
-    }
-    function openFullscreenGame(path) {
-      window.location.href = `iframe.html?game=${encodeURIComponent(path)}`;
-    }
-
-    // ----- Mobile detection & modal behavior -----
-    function isMobileDevice() {
-      // checks userAgent and touch capability for broader detection
-      const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-      const isUA = /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile|BlackBerry/i.test(ua);
-      const hasTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
-      return isUA || hasTouch;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      try {
-        const modalOverlay = document.getElementById('mobileModal');
-        const okBtn = document.getElementById('mobileModalOk');
-
-        // If mobile is detected and the user hasn't already accepted in this browser session,
-        // show the modal. (We use sessionStorage so it reappears in a new session.)
-        const acceptedFlag = sessionStorage.getItem('veloraMobileAccepted');
-
-        if (isMobileDevice() && !acceptedFlag) {
-          // show modal
-          modalOverlay.classList.remove('hidden');
-          // prevent background scroll while modal visible
-          document.documentElement.style.overflow = 'hidden';
-          document.body.style.overflow = 'hidden';
-          // focus OK button for accessibility
-          okBtn.focus();
-
-          okBtn.addEventListener('click', () => {
-            modalOverlay.classList.add('hidden');
-            document.documentElement.style.overflow = '';
-            document.body.style.overflow = '';
-            // remember acceptance for this session only
-            sessionStorage.setItem('veloraMobileAccepted', '1');
-          });
-
-          // allow escape key to close modal (optional)
-          const escHandler = (e) => {
-            if (e.key === 'Escape') {
-              if (!modalOverlay.classList.contains('hidden')) {
-                modalOverlay.classList.add('hidden');
-                document.documentElement.style.overflow = '';
-                document.body.style.overflow = '';
-                sessionStorage.setItem('veloraMobileAccepted', '1');
-              }
-            }
-          };
-          document.addEventListener('keydown', escHandler, { once: false });
-
-          // prevent clicks from propagating to background
-          modalOverlay.addEventListener('click', (e) => {
-            // only close when clicking the overlay itself? we prefer blocking accidental clicks,
-            // so do not close when clicking outside — require OK button.
-            e.stopPropagation();
-          }, { passive: true });
-        }
-      } catch (err) {
-        console.warn('Mobile modal failed to initialize', err);
-      }
     });
   </script>
 </body>
