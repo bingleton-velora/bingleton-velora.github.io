@@ -40,11 +40,10 @@
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
   
   <style>
-    /* Using your exact CSS variables and styling */
     :root {
       --bg-gradient-start: #14141f;
       --bg-gradient-end: #1f1f2f;
-      --accent-color: #e50914; /* Switched to Movie-Red, but you can change back to #4a90e2 */
+      --accent-color: #e50914;
       --accent-glow: rgba(229, 9, 20, 0.6);
       --text-color: #e0e0e0;
       --card-bg: rgba(255, 255, 255, 0.05);
@@ -66,7 +65,6 @@
     }
     #tsparticles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
     
-    /* Reusing your Topbar, Sidebar, and Grid styles exactly */
     .topbar {
       position: fixed; top: 0; left: 0; width: 100%; height: var(--topbar-height);
       background: var(--glass-bg); backdrop-filter: blur(8px);
@@ -99,15 +97,21 @@
 
     .main { position: absolute; top: var(--topbar-height); left: var(--sidebar-width); right: 0; bottom: 0; padding: 24px; overflow-y: auto; z-index: 1; }
     
-    .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+    /* Square Shape Grid Fix */
+    .game-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+        gap: 20px; 
+    }
+    
     .game-item {
       position: relative; background: var(--card-bg); border: 2px solid transparent;
       border-radius: var(--border-radius); overflow: hidden; cursor: pointer; transition: 0.3s;
+      aspect-ratio: 2 / 3; /* Forces a consistent poster shape */
     }
     .game-item:hover { transform: translateY(-8px); border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
-    .game-item img { width: 100%; height: 260px; object-fit: cover; display: block; }
+    .game-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* Heart and Hover Text */
     .game-item::after {
       content: attr(data-title); position: absolute; bottom: 0; left: 0; width: 100%;
       padding: 10px; background: rgba(0, 0, 0, 0.8); color: #fff; font-size: 14px;
@@ -145,8 +149,6 @@
   </div>
 
   <div class="main">
-    <div id="searchResultsMessage" style="display:none; margin-bottom:15px;"></div>
-    
     <div class="actions-bar">
       <button id="randomBtn">🎲 Surprise Movie</button>
       <div class="favorites-bar">
@@ -156,331 +158,206 @@
     </div>
 
     <div class="game-grid" id="movieGrid">
-      <h2 class="genre-title">Animation & Series</h2>
-<div class="game-grid" id="movieGrid">
-<div class="game-grid">
-    <div class="game-item" data-title="The CupHead Show" data-movie="https://drive.google.com/drive/folders/1j_K1YV4w_sHAzwEAaUMl-qSk4qjrYSJ_" data-icon="images/posters/cuphead.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/cuphead.jpg" alt="The CupHead Show" onclick="openMovie('https://drive.google.com/drive/folders/1j_K1YV4w_sHAzwEAaUMl-qSk4qjrYSJ_')">
+        <div class="game-item" data-title="The CupHead Show" data-movie="https://drive.google.com/drive/folders/1j_K1YV4w_sHAzwEAaUMl-qSk4qjrYSJ_" data-icon="images/posters/cuphead.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/cuphead.jpg" alt="The CupHead Show" onclick="openMovie('https://drive.google.com/drive/folders/1j_K1YV4w_sHAzwEAaUMl-qSk4qjrYSJ_')">
+        </div>
+        <div class="game-item" data-title="Five Nights at Freddy's" data-movie="https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY" data-icon="images/posters/fnaf.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/fnaf.jpg" alt="Five Nights at Freddy's" onclick="openMovie('https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY')">
+        </div>
+        <div class="game-item" data-title="Kirby: Right Back At Ya!" data-movie="https://drive.google.com/drive/u/0/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw" data-icon="images/posters/kirby.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kirby.jpg" alt="Kirby: Right Back At Ya!" onclick="openMovie('https://drive.google.com/drive/u/0/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw')">
+        </div>
+        <div class="game-item" data-title="Smiling Critters Series" data-movie="https://drive.google.com/drive/folders/1rkjwmHMR8j2nqD2DmM2qHt1vVRmNwrXd" data-icon="images/posters/smiling_critters.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/smiling_critters.jpg" alt="Smiling Critters Series" onclick="openMovie('https://drive.google.com/drive/folders/1rkjwmHMR8j2nqD2DmM2qHt1vVRmNwrXd')">
+        </div>
+        <div class="game-item" data-title="Pok&eacute;mon series" data-movie="https://drive.google.com/drive/folders/1I7-ZUInlg9jb4R6LGq0qX3n7bjGKPFFO" data-icon="images/posters/pokemon_series.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/pokemon_series.jpg" alt="Pok&eacute;mon series" onclick="openMovie('https://drive.google.com/drive/folders/1I7-ZUInlg9jb4R6LGq0qX3n7bjGKPFFO')">
+        </div>
+        <div class="game-item" data-title="Mewtwo Strikes Back" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/mewtwo_strikes_back.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/mewtwo_strikes_back.jpg" alt="Mewtwo Strikes Back" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
+        </div>
+        <div class="game-item" data-title="Mewtwo Returns" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/mewtwo_returns.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/mewtwo_returns.jpg" alt="Mewtwo Returns" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
+        </div>
+        <div class="game-item" data-title="Pokemon The Movie 2000" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/pokemon_2000.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/pokemon_2000.jpg" alt="Pokemon The Movie 2000" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
+        </div>
+        <div class="game-item" data-title="Spell of the Unown" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/spell_of_unown.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/spell_of_unown.jpg" alt="Spell of the Unown" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
+        </div>
+        <div class="game-item" data-title="Celebi: Voice of the Forest" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/celebi.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/celebi.jpg" alt="Celebi: Voice of the Forest" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
+        </div>
+        <div class="game-item" data-title="Jirachi Wish Maker" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/jirachi.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/jirachi.jpg" alt="Jirachi Wish Maker" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
+        </div>
+        <div class="game-item" data-title="I Choose You!" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/i_choose_you.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/i_choose_you.jpg" alt="I Choose You!" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
+        </div>
+        <div class="game-item" data-title="The Power of Us" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/power_of_us.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/power_of_us.jpg" alt="The Power of Us" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
+        </div>
+        <div class="game-item" data-title="The Garfield Movie" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/garfield_movie.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/garfield_movie.jpg" alt="The Garfield Movie" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
+        </div>
+        <div class="game-item" data-title="Garfield: A Tail of Two Kitties" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/garfield_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/garfield_2.jpg" alt="Garfield: A Tail of Two Kitties" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
+        </div>
+        <div class="game-item" data-title="Dog Man 2025" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/dog_man.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/dog_man.jpg" alt="Dog Man 2025" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
+        </div>
+        <div class="game-item" data-title="Diary of a Wimpy Kid Collection" data-movie="https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV" data-icon="images/posters/wimpy_kid.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/wimpy_kid.jpg" alt="Diary of a Wimpy Kid Collection" onclick="openMovie('https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV')">
+        </div>
+        <div class="game-item" data-title="Mewtwo Strikes Back Evolution" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/mewtwo_evolution.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/mewtwo_evolution.jpg" alt="Mewtwo Strikes Back Evolution" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
+        </div>
+        <div class="game-item" data-title="Detective Pikachu" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/detective_pikachu.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/detective_pikachu.jpg" alt="Detective Pikachu" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
+        </div>
+        <div class="game-item" data-title="The Super Mario Bros. Movie" data-movie="https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY" data-icon="images/posters/mario_movie.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/mario_movie.jpg" alt="The Super Mario Bros. Movie" onclick="openMovie('https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY')">
+        </div>
+        <div class="game-item" data-title="Sonic the Hedgehog" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/sonic_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/sonic_1.jpg" alt="Sonic the Hedgehog" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
+        </div>
+        <div class="game-item" data-title="Sonic the Hedgehog 2" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/sonic_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/sonic_2.jpg" alt="Sonic the Hedgehog 2" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
+        </div>
+        <div class="game-item" data-title="Sonic the Hedgehog 3" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/sonic_3.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/sonic_3.jpg" alt="Sonic the Hedgehog 3" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
+        </div>
+        <div class="game-item" data-title="Knuckles Series" data-movie="https://drive.google.com/drive/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw" data-icon="images/posters/knuckles.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/knuckles.jpg" alt="Knuckles Series" onclick="openMovie('https://drive.google.com/drive/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw')">
+        </div>
+        <div class="game-item" data-title="Despicable Me" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/despicable_me_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/despicable_me_1.jpg" alt="Despicable Me" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
+        </div>
+        <div class="game-item" data-title="Despicable Me 2" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/despicable_me_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/despicable_me_2.jpg" alt="Despicable Me 2" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
+        </div>
+        <div class="game-item" data-title="Despicable Me 3" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/despicable_me_3.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/despicable_me_3.jpg" alt="Despicable Me 3" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
+        </div>
+        <div class="game-item" data-title="Despicable Me 4" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/despicable_me_4.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/despicable_me_4.jpg" alt="Despicable Me 4" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
+        </div>
+        <div class="game-item" data-title="Minions" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/minions.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/minions.jpg" alt="Minions" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
+        </div>
+        <div class="game-item" data-title="Minions: The Rise of Gru" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/minions_rise_of_gru.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/minions_rise_of_gru.jpg" alt="Minions: The Rise of Gru" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
+        </div>
+        <div class="game-item" data-title="Inside Out" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/inside_out_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/inside_out_1.jpg" alt="Inside Out" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
+        </div>
+        <div class="game-item" data-title="Inside Out 2" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/inside_out_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/inside_out_2.jpg" alt="Inside Out 2" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
+        </div>
+        <div class="game-item" data-title="Kung Fu Panda" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/kung_fu_panda_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kung_fu_panda_1.jpg" alt="Kung Fu Panda" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
+        </div>
+        <div class="game-item" data-title="Kung Fu Panda 2" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/kung_fu_panda_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kung_fu_panda_2.jpg" alt="Kung Fu Panda 2" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
+        </div>
+        <div class="game-item" data-title="Kung Fu Panda 3" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/kung_fu_panda_3.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kung_fu_panda_3.jpg" alt="Kung Fu Panda 3" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
+        </div>
+        <div class="game-item" data-title="Kung Fu Panda 4" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/kung_fu_panda_4.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/kung_fu_panda_4.jpg" alt="Kung Fu Panda 4" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
+        </div>
+        <div class="game-item" data-title="Shrek" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/shrek_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/shrek_1.jpg" alt="Shrek" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
+        </div>
+        <div class="game-item" data-title="Shrek 2" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/shrek_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/shrek_2.jpg" alt="Shrek 2" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
+        </div>
+        <div class="game-item" data-title="Shrek the Third" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/shrek_3.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/shrek_3.jpg" alt="Shrek the Third" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
+        </div>
+        <div class="game-item" data-title="Shrek Forever After" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/shrek_4.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/shrek_4.jpg" alt="Shrek Forever After" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
+        </div>
+        <div class="game-item" data-title="Puss in Boots" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/puss_in_boots_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/puss_in_boots_1.jpg" alt="Puss in Boots" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
+        </div>
+        <div class="game-item" data-title="Puss in Boots: The Last Wish" data-movie="https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV" data-icon="images/posters/puss_in_boots_2.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/puss_in_boots_2.jpg" alt="Puss in Boots: The Last Wish" onclick="openMovie('https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV')">
+        </div>
+        <div class="game-item" data-title="Diary of a Wimpy Kid (2010)" data-movie="https://drive.google.com/file/d/17w033Yh8D-v8r_G3I9R1vB2L0zX4S9Uf" data-icon="images/posters/wimpy_kid_1.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/wimpy_kid_1.jpg" alt="Diary of a Wimpy Kid (2010)" onclick="openMovie('https://drive.google.com/file/d/17w033Yh8D-v8r_G3I9R1vB2L0zX4S9Uf')">
+        </div>
+        <div class="game-item" data-title="Rodrick Rules" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/rodrick_rules.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/rodrick_rules.jpg" alt="Rodrick Rules" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
+        </div>
+        <div class="game-item" data-title="Dog Days" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/dog_days.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/dog_days.jpg" alt="Dog Days" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
+        </div>
+        <div class="game-item" data-title="The Long Haul" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/long_haul.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/long_haul.jpg" alt="The Long Haul" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
+        </div>
+        <div class="game-item" data-title="Deadpool & Wolverine" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/deadpool_wolverine.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/deadpool_wolverine.jpg" alt="Deadpool & Wolverine" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
+        </div>
+        <div class="game-item" data-title="Spider-Man: Across the Spider-Verse" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/spiderverse.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/spiderverse.jpg" alt="Spider-Man: Across the Spider-Verse" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
+        </div>
+        <div class="game-item" data-title="The Batman" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/the_batman.jpg">
+            <div class="heart">♡</div>
+            <img src="images/posters/the_batman.jpg" alt="The Batman" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
+        </div>
     </div>
-    <div class="game-item" data-title="Five Nights at Freddy's" data-movie="https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY" data-icon="images/posters/fnaf.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/fnaf.jpg" alt="Five Nights at Freddy's" onclick="openMovie('https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY')">
-    </div>
-    <div class="game-item" data-title="Kirby: Right Back At Ya!" data-movie="https://drive.google.com/drive/u/0/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw" data-icon="images/posters/kirby.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/kirby.jpg" alt="Kirby: Right Back At Ya!" onclick="openMovie('https://drive.google.com/drive/u/0/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw')">
-    </div>
-    <div class="game-item" data-title="Smiling Critters Series" data-movie="https://drive.google.com/drive/folders/1rkjwmHMR8j2nqD2DmM2qHt1vVRmNwrXd" data-icon="images/posters/smiling_critters.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/smiling_critters.jpg" alt="Smiling Critters Series" onclick="openMovie('https://drive.google.com/drive/folders/1rkjwmHMR8j2nqD2DmM2qHt1vVRmNwrXd')">
-    </div>
-    <div class="game-item" data-title="Pok&eacute;mon series" data-movie="https://drive.google.com/drive/folders/1I7-ZUInlg9jb4R6LGq0qX3n7bjGKPFFO" data-icon="images/posters/pokemon_series.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/pokemon_series.jpg" alt="Pok&eacute;mon series" onclick="openMovie('https://drive.google.com/drive/folders/1I7-ZUInlg9jb4R6LGq0qX3n7bjGKPFFO')">
-    </div>
-    <div class="game-item" data-title="Mewtwo Strikes Back" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/mewtwo_strikes_back.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/mewtwo_strikes_back.jpg" alt="Mewtwo Strikes Back" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
-    </div>
-    <div class="game-item" data-title="Mewtwo Returns" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/mewtwo_returns.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/mewtwo_returns.jpg" alt="Mewtwo Returns" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
-    </div>
-    <div class="game-item" data-title="Pokemon The Movie 2000" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/pokemon_2000.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/pokemon_2000.jpg" alt="Pokemon The Movie 2000" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
-    </div>
-    <div class="game-item" data-title="Spell of the Unown" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/spell_of_unown.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/spell_of_unown.jpg" alt="Spell of the Unown" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
-    </div>
-    <div class="game-item" data-title="Celebi: Voice of the Forest" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/celebi.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/celebi.jpg" alt="Celebi: Voice of the Forest" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
-    </div>
-    <div class="game-item" data-title="Jirachi Wish Maker" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/jirachi.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/jirachi.jpg" alt="Jirachi Wish Maker" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
-    </div>
-    <div class="game-item" data-title="I Choose You!" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/i_choose_you.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/i_choose_you.jpg" alt="I Choose You!" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
-    </div>
-    <div class="game-item" data-title="The Power of Us" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/power_of_us.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/power_of_us.jpg" alt="The Power of Us" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
-    </div>
-    <div class="game-item" data-title="The Garfield Movie" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/garfield_movie.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/garfield_movie.jpg" alt="The Garfield Movie" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
-    </div>
-    <div class="game-item" data-title="Garfield: A Tail of Two Kitties" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/garfield_2.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/garfield_2.jpg" alt="Garfield: A Tail of Two Kitties" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
-    </div>
-    <div class="game-item" data-title="Dog Man 2025" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/dog_man.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/dog_man.jpg" alt="Dog Man 2025" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
-    </div>
-    <div class="game-item" data-title="Diary of a Wimpy Kid Collection" data-movie="https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV" data-icon="images/posters/wimpy_kid.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/wimpy_kid.jpg" alt="Diary of a Wimpy Kid Collection" onclick="openMovie('https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV')">
-    </div>
-  <div class="game-item" data-title="Mewtwo Strikes Back Evolution" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/mewtwo_evolution.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/mewtwo_evolution.jpg" alt="Mewtwo Strikes Back Evolution" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
-    </div>
-
-    <div class="game-item" data-title="Detective Pikachu" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/detective_pikachu.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/detective_pikachu.jpg" alt="Detective Pikachu" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
-    </div>
-
-    <div class="game-item" data-title="The Super Mario Bros. Movie" data-movie="https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY" data-icon="images/posters/mario_movie.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/mario_movie.jpg" alt="The Super Mario Bros. Movie" onclick="openMovie('https://drive.google.com/file/d/1OyO1OdhtfwR883Uvi0QPP5iooGcxTVSY')">
-    </div>
-
-    <div class="game-item" data-title="Sonic the Hedgehog" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/sonic_1.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/sonic_1.jpg" alt="Sonic the Hedgehog" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
-    </div>
-
-    <div class="game-item" data-title="Sonic the Hedgehog 2" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/sonic_2.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/sonic_2.jpg" alt="Sonic the Hedgehog 2" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
-    </div>
-
-    <div class="game-item" data-title="Sonic the Hedgehog 3" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/sonic_3.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/sonic_3.jpg" alt="Sonic the Hedgehog 3" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
-    </div>
-
-    <div class="game-item" data-title="Knuckles Series" data-movie="https://drive.google.com/drive/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw" data-icon="images/posters/knuckles.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/knuckles.jpg" alt="Knuckles Series" onclick="openMovie('https://drive.google.com/drive/folders/1LawIFQ48UCdP3-VUan7iWTm4l5EonWYw')">
-    </div>
-
-    <div class="game-item" data-title="Despicable Me" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/despicable_me_1.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/despicable_me_1.jpg" alt="Despicable Me" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
-    </div>
-
-    <div class="game-item" data-title="Despicable Me 2" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/despicable_me_2.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/despicable_me_2.jpg" alt="Despicable Me 2" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
-    </div>
-
-    <div class="game-item" data-title="Despicable Me 3" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/despicable_me_3.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/despicable_me_3.jpg" alt="Despicable Me 3" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
-    </div>
-
-    <div class="game-item" data-title="Despicable Me 4" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/despicable_me_4.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/despicable_me_4.jpg" alt="Despicable Me 4" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
-    </div>
-
-    <div class="game-item" data-title="Minions" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/minions.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/minions.jpg" alt="Minions" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
-    </div>
-
-    <div class="game-item" data-title="Minions: The Rise of Gru" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/minions_rise_of_gru.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/minions_rise_of_gru.jpg" alt="Minions: The Rise of Gru" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
-    </div>
-  <div class="game-item" data-title="Inside Out" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/inside_out_1.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/inside_out_1.jpg" alt="Inside Out" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
-    </div>
-
-    <div class="game-item" data-title="Inside Out 2" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/inside_out_2.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/inside_out_2.jpg" alt="Inside Out 2" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
-    </div>
-
-    <div class="game-item" data-title="Kung Fu Panda" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/kung_fu_panda_1.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/kung_fu_panda_1.jpg" alt="Kung Fu Panda" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
-    </div>
-
-    <div class="game-item" data-title="Kung Fu Panda 2" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/kung_fu_panda_2.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/kung_fu_panda_2.jpg" alt="Kung Fu Panda 2" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
-    </div>
-
-    <div class="game-item" data-title="Kung Fu Panda 3" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/kung_fu_panda_3.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/kung_fu_panda_3.jpg" alt="Kung Fu Panda 3" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
-    </div>
-
-    <div class="game-item" data-title="Kung Fu Panda 4" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/kung_fu_panda_4.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/kung_fu_panda_4.jpg" alt="Kung Fu Panda 4" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
-    </div>
-
-    <div class="game-item" data-title="Shrek" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/shrek_1.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/shrek_1.jpg" alt="Shrek" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
-    </div>
-
-    <div class="game-item" data-title="Shrek 2" data-movie="https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p" data-icon="images/posters/shrek_2.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/shrek_2.jpg" alt="Shrek 2" onclick="openMovie('https://drive.google.com/file/d/1uT4LpG_6X7R_2YF-8h_v8L_1X3K-9b2p')">
-    </div>
-
-    <div class="game-item" data-title="Shrek the Third" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/shrek_3.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/shrek_3.jpg" alt="Shrek the Third" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
-    </div>
-
-    <div class="game-item" data-title="Shrek Forever After" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/shrek_4.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/shrek_4.jpg" alt="Shrek Forever After" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
-    </div>
-
-    <div class="game-item" data-title="Puss in Boots" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/puss_in_boots_1.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/puss_in_boots_1.jpg" alt="Puss in Boots" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
-    </div>
-
-    <div class="game-item" data-title="Puss in Boots: The Last Wish" data-movie="https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV" data-icon="images/posters/puss_in_boots_2.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/puss_in_boots_2.jpg" alt="Puss in Boots: The Last Wish" onclick="openMovie('https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV')">
-    </div>
-  <div class="game-item" data-title="Dog Man" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/dog_man.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/dog_man.jpg" alt="Dog Man" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
-    </div>
-
-    <div class="game-item" data-title="Diary of a Wimpy Kid" data-movie="https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV" data-icon="images/posters/wimpy_kid_collection.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/wimpy_kid_collection.jpg" alt="Diary of a Wimpy Kid" onclick="openMovie('https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV')">
-    </div>
-
-    <div class="game-item" data-title="Diary of a Wimpy Kid (2010)" data-movie="https://drive.google.com/file/d/17w033Yh8D-v8r_G3I9R1vB2L0zX4S9Uf" data-icon="images/posters/wimpy_kid_1.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/wimpy_kid_1.jpg" alt="Diary of a Wimpy Kid (2010)" onclick="openMovie('https://drive.google.com/file/d/17w033Yh8D-v8r_G3I9R1vB2L0zX4S9Uf')">
-    </div>
-
-    <div class="game-item" data-title="Rodrick Rules" data-movie="https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5" data-icon="images/posters/rodrick_rules.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/rodrick_rules.jpg" alt="Rodrick Rules" onclick="openMovie('https://drive.google.com/file/d/1O0KxX_2-mRREr_7m-O_zG3L7T6R_w_R5')">
-    </div>
-
-    <div class="game-item" data-title="Dog Days" data-movie="https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7" data-icon="images/posters/dog_days.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/dog_days.jpg" alt="Dog Days" onclick="openMovie('https://drive.google.com/file/d/1H_u_V8zV9L-P7z_8m-X_qH4T5R_w_Q7')">
-    </div>
-
-    <div class="game-item" data-title="The Long Haul" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/long_haul.jpg">
-        <div class="heart">♡</div>
-        <img src="images/posters/long_haul.jpg" alt="The Long Haul" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
-    </div>
-</div>
-</div>
-
-<br>
-
-<h2 class="genre-title">Pokémon Collection</h2>
-<div class="game-grid" id="movieGrid">
-  <div class="game-item" data-title="Mewtwo Strikes Back" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/pokemon1.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/pokemon1.jpg" alt="Mewtwo Strikes Back Pokémon" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
-  </div>
-  <div class="game-item" data-title="Mewtwo Returns" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/pokemon_mewtwo_returns.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/pokemon_mewtwo_returns.jpg" alt="Mewtwo Returns Pokémon" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
-  </div>
-  <div class="game-item" data-title="The Movie 2000" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/pokemon2000.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/pokemon2000.jpg" alt="The Movie 2000 Pokémon" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
-  </div>
-  <div class="game-item" data-title="Spell of the Unown" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/pokemon3.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/pokemon3.jpg" alt="Spell of the Unown Pokémon" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
-  </div>
-  <div class="game-item" data-title="Celebi: Voice of the Forest" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/pokemon4.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/pokemon4.jpg" alt="Celebi: Voice of the Forest Pokémon" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
-  </div>
-  <div class="game-item" data-title="Jirachi Wish Maker" data-movie="https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg" data-icon="images/posters/pokemon_jirachi.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/pokemon_jirachi.jpg" alt="Jirachi Wish Maker Pokémon" onclick="openMovie('https://drive.google.com/file/d/1yrnL1o47TUJrs37KXj6XwdwuJMwig5Yg')">
-  </div>
-  <div class="game-item" data-title="I Choose You!" data-movie="https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D" data-icon="images/posters/pokemon_choose_you.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/pokemon_choose_you.jpg" alt="I Choose You! Pokémon" onclick="openMovie('https://drive.google.com/file/d/1UKCK7zdXb374ZiDB-79zubOVtBU-8Q2D')">
-  </div>
-  <div class="game-item" data-title="The Power of Us" data-movie="https://drive.google.com/file/d/1Hq9m7W7k2L9Iq6m8q7n8r9P0l0u1v2w3" data-icon="images/posters/pokemon_power_of_us.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/pokemon_power_of_us.jpg" alt="The Power of Us Pokémon" onclick="openMovie('https://drive.google.com/file/d/1Hq9m7W7k2L9Iq6m8q7n8r9P0l0u1v2w3')">
-  </div>
-</div>
-
-<br>
-
-<h2 class="genre-title">Dog Man</h2>
-<div class="game-grid" id="movieGrid">
-  <div class="game-item" data-title="Dog Man 2025" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/dog_man.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/dog_man.jpg" alt="Dog Man 2025 Animation" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
-  </div>
-</div>
-
-<br>
-
-<h2 class="genre-title">Diary of a Wimpy Kid</h2>
-<div class="game-grid" id="movieGrid">
-  <div class="game-item" data-title="Diary of a Wimpy Kid Collection" data-movie="https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV" data-icon="images/posters/wimpy_kid.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/wimpy_kid.jpg" alt="Diary of a Wimpy Kid Comedy" onclick="openMovie('https://drive.google.com/drive/folders/1EQSlsKFmwH75gcaHwGsQMCLetLUoKkMV')">
-  </div>
-</div>
-
-<br>
-
-<h2 class="genre-title">Action & Adventure</h2>
-<div class="game-grid" id="movieGrid">
-  <div class="game-item" data-title="Deadpool & Wolverine" data-movie="https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL" data-icon="images/posters/deadpool_wolverine.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/deadpool_wolverine.jpg" alt="Deadpool & Wolverine Action" onclick="openMovie('https://drive.google.com/file/d/1p5-TgEV9AykxchfLMZ4zB4jJhSKKW5f9xRL')">
-  </div>
-  <div class="game-item" data-title="Spider-Man: Across the Spider-Verse" data-movie="https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r" data-icon="images/posters/spiderverse.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/spiderverse.jpg" alt="Spider-Man: Across the Spider-Verse Action" onclick="openMovie('https://drive.google.com/file/d/1_5PiiaO_lwVMh3_4Px-TU0modiH11V8r')">
-  </div>
-  <div class="game-item" data-title="The Batman" data-movie="https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U" data-icon="images/posters/the_batman.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/the_batman.jpg" alt="The Batman Action" onclick="openMovie('https://drive.google.com/file/d/1Vbux2rKqR7SsUGDYYFZpKbTKxoa31r9U')">
-  </div>
-</div>
-
-<br>
-
-<h2 class="genre-title">Kids & Family</h2>
-<div class="game-grid" id="movieGrid">
-  <div class="game-item" data-title="The Super Mario Bros. Movie" data-movie="https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG" data-icon="images/posters/mario_movie.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/mario_movie.jpg" alt="The Super Mario Bros. Movie Animation" onclick="openMovie('https://drive.google.com/file/d/1AoToS8Ettg_wVvjDxQz3BiWLu-ewi6RG')">
-  </div>
-  <div class="game-item" data-title="Puss in Boots: The Last Wish" data-movie="https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf" data-icon="images/posters/puss_in_boots.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/puss_in_boots.jpg" alt="Puss in Boots: The Last Wish Kids" onclick="openMovie('https://drive.google.com/file/d/13fTi-G4RAShFYX_UK0GMP4byLOjL8Tzf')">
-  </div>
-  <div class="game-item" data-title="Minions: The Rise of Gru" data-movie="https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC" data-icon="images/posters/minions.jpg">
-    <div class="heart">♡</div>
-    <img src="images/posters/minions.jpg" alt="Minions: The Rise of Gru Kids" onclick="openMovie('https://drive.google.com/file/d/1BE--u5k8B7YLOuAhwm-HV2kjy2cchfSC')">
-  </div>
-</div>
-
-      </div>
   </div>
 
   <script>
-    // Particles Config (Identical to your original)
     tsParticles.load("tsparticles", {
       fpsLimit: 60, particles: {
         number: { value: 60 }, color: { value: "#ffffff" },
@@ -536,7 +413,7 @@
     }
 
     function openMovie(path) {
-      window.location.href = path; // Or your iframe.html?movie=...
+      window.location.href = path;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
