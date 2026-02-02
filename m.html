@@ -378,7 +378,9 @@
       renderFavoritesBar();
       updateAllHearts();
     }
-
+function openInSameTab(url) {
+  window.location.href = url;
+}
     function renderFavoritesBar() {
       const container = document.getElementById('favoriteIcons');
       container.innerHTML = '';
